@@ -1,0 +1,13 @@
+{
+  "resources/css/app.css": {
+    "file": "assets/app-n5u-6W5N.css",
+    "src": "resources/css/app.css",
+    "isEntry": true
+  },
+  "resources/js/Main.jsx": {
+    "file": "assets/Main-BldsDJzE.js",
+    "name": "Main",
+    "src": "resources/js/Main.jsx",
+    "isEntry": true
+  }
+}
