@@ -16,16 +16,21 @@ const ProductoDetalle = () => {
   const [isZoomed, setIsZoomed] = useState(false); // Estado para el zoom
   const [zoomPos, setZoomPos] = useState({ x: 0, y: 0 }); // Para controlar la posición del zoom
   const navigate = useNavigate();
+  const [cantidad, setCantidad] = useState(1);
+  const role = localStorage.getItem('role');
+  const idUsuario = localStorage.getItem("idUsuarios");
+
 
   useEffect(() => {
-    fetch(`http://127.0.0.1:8000/api/productos/${id}`)
-      .then((res) => res.json())
-      .then((data) => setProducto(data))
+    axios.get(`http://127.0.0.1:8000/api/productos/${id}`)
+      .then((response) => {
+        setProducto(response.data);
+        console.log("Producto obtenido:", response.data); // 👈 Aquí se imprimen los datos
+      })
       .catch((error) => console.error("Error al obtener el producto:", error));
   }, [id]);
 
   if (!producto) return <div className="p-4">Cargando producto...</div>;
-
   const imagenSrc = producto.Imagen
     ? `data:image/jpeg;base64,${producto.Imagen}`
     : "https://via.placeholder.com/150";
@@ -60,10 +65,46 @@ const ProductoDetalle = () => {
       });
   };
 
+
+
+  const addToCart = () => {
+
+    
+    console.log({
+      Productos_idProducts: parseInt(id),
+      Cantidad: cantidad,
+      Usuarios_idUsuarios: parseInt(idUsuario)
+    });
+    axios.post(`http://127.0.0.1:8000/api/carrito`,{
+      Productos_idProducts: id,
+      Cantidad: cantidad,
+      Usuarios_idUsuarios: idUsuario
+    })  
+    .then(() =>{
+      Swal.fire({
+        title: '¡Agregado al Carrito!',
+        icon: 'success',
+        confirmButtonText: 'Aceptar'
+      })
+    })
+    .catch(() =>{
+
+      Swal.fire({
+        title: 'Error al agreagar al Carrito!',
+        icon: 'warning',
+        confirmButtonText: 'Aceptar'
+      })
+      
+    })
+  };
+
   return (
-    <div className="p-4 relative">
-      <div className="flex flex-col md:flex-row gap-6">
-        {/* Imagen con zoom */}
+  <div className="p-6 bg-gray-100 min-h">
+
+    <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-8">
+{/* Imagen con zoom */}
+      <div className="bg-white p-4 rounded-lg shadow w-full md:w-[450px]">
+
         <div
           className="cursor-pointer group w-[400px] h-[400px] overflow-hidden border rounded-lg"
           onMouseEnter={() => setIsZoomed(true)} 
@@ -77,22 +118,68 @@ const ProductoDetalle = () => {
             backgroundRepeat: "no-repeat",
           }}
         ></div>
+      </div>
+      
 
         {/* Detalles del producto */}
-        <div className="flex flex-col justify-between flex-grow">
+        <div className="flex-1 bg-white p-6 rounded-lg shadow">
           <div>
             <h1 className="text-3xl font-bold mb-2">{producto.Nombre}</h1>
             <p className="text-gray-700 mb-4">{producto.Descripcion}</p>
+            <p className="text-gray-700 mb-4">Disponibles: {producto.Stock} Unds</p>
             <div className="text-2xl font-bold text-gray-900 mb-4">
               ${parseFloat(producto.Precio).toLocaleString("es-CO")}
             </div>
           </div>
 
+          <div className="flex items-center gap-4">
+          {/* Selector de cantidad */}
+            <div className="flex items-center bg-withe-100 rounded-full overflow-hidden shadow-lg">
+              <button
+                onClick={() => setCantidad((prev) => Math.max(1, prev - 1))}
+                className="px-4 py-2 text-gray-700 hover:bg-gray-200 transition"
+              >
+                −
+              </button>
+              <input
+                type="number"
+                min="1"
+                max={producto.Stock}
+                value={cantidad}
+                onChange={(e) => {
+                  const valor = Number(e.target.value);
+                  if (valor > producto.Stock) {
+                    Swal.fire("¡Stock insuficiente!", "No puedes seleccionar más de lo disponible.", "warning");
+                    setCantidad(producto.Stock);
+                  } else {
+                    setCantidad(Math.max(1, valor));
+                  }
+                }}
+                                className="w-12 text-center bg-transparent outline-none text-gray-900 font-medium"
+              />
+              <button
+                onClick={() =>
+                  setCantidad((prev) => (prev < producto.Stock ? prev + 1 : prev))
+                }
+                className="px-4 py-2 text-gray-700 hover:bg-gray-200 transition"
+              >
+                +
+              </button>
+          </div>
+        </div>
+
+          {/* Boto Agregar al carrito */}
           <div className="flex gap-2 justify-start mt-6">
-            <button className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-300 flex items-center">
+            <button 
+              className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-300 flex items-center"
+              onClick={addToCart}
+              >
               <ShoppingCart size={20} className="mr-2" />
               Agregar al Carrito
             </button>
+
+
+            {role === "1" && (
             <button 
               className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-300 flex items-center"
               onClick={() => setModalEditarAbierto(true)} // Abre el modal de edición
@@ -100,6 +187,8 @@ const ProductoDetalle = () => {
               <Pen size={20} className="mr-2" />
               Editar
             </button>
+                        )}
+            {role === "1" && (
             <button 
               className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-300 flex items-center"
               onClick={EliminarProducto}
@@ -107,6 +196,8 @@ const ProductoDetalle = () => {
               <Trash2 size={20} className="mr-2" />
               Eliminar
             </button>
+            )}
+
           </div>
         </div>
       </div>

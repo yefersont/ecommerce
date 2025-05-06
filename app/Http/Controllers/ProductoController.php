@@ -16,13 +16,31 @@ class ProductoController extends Controller
     {
         $productos = Product::all();
 
-            // Convertir la imagen a base64 si está presente
+
+
         foreach ($productos as $producto) {
             if ($producto->Imagen) {
                 $producto->Imagen = base64_encode($producto->Imagen);
             }
         }
         return response()->json($productos, 200, [], JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_IGNORE);
+    }
+
+    public function buscar(Request $request){
+
+        $nombre = $request->input('nombre');
+
+        $productos = Product::where('Nombre', 'like', '%' . $nombre . '%')->get();
+    
+        
+        foreach ($productos as $producto) {
+            if ($producto->Imagen) {
+                $producto->Imagen = base64_encode($producto->Imagen);
+            }
+        }
+
+        return response()->json($productos, 200, [], JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_IGNORE);
+
     }
 
     /**

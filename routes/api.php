@@ -4,6 +4,9 @@ use App\Http\Controllers\CategoriaController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductoController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CarritoController;
+use App\Http\Middleware\CheckTokenExpiry;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,23 +18,39 @@ use App\Http\Controllers\ProductoController;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+// Login 
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware(['auth:sanctum', 'check.token.expiry'])->group(function () {
+
+    Route::get('/user', fn(Request $request) => $request->user());
+
+// Productos
+
+    Route::get('/productos', [ProductoController::class, 'index']); 
+    Route::get('/productos/{id}', [ProductoController::class, 'show']);
+    Route::delete('/productos/{producto}', [ProductoController::class , 'destroy']);
+    Route::post('/productos', [ProductoController::class,'store']);
+    Route::put('/productos/{id}', [ProductoController::class,'update']);
+    Route::get('/productos/buscar', [ProductoController::class, 'buscar']);
+
+// Categorias
+
+    Route::get('/categorias' , [CategoriaController::class, 'index']);
+    Route::get( '/categorias/{id}/productos', [ProductoController::class, 'porCategoria']);
+
+// Carrito de compras
+    
+    Route::post( '/carrito', [CarritoController::class, 'store']);
+    Route::get('/carrito/{idUsuario}', [CarritoController::class, 'ShowbyUser']);
+    Route::delete('/carrito/{idUsuario}/vaciar', [CarritoController::class, 'vaciar']);
+    Route::get( '/carrito/{idUsuario}', [CarritoController::class, 'ShowbyUser']);
+    Route::delete( '/carrito/{idUsuario}/producto/{idProducto}', [CarritoController::class, 'eliminarProducto']);
+
 });
 
-// Rutas Productos
-
-Route::get('/productos', [ProductoController::class, 'index']); 
-Route::get('/productos/{id}', [ProductoController::class, 'show']);
-Route::delete('/productos/{producto}', [ProductoController::class , 'destroy']);
-Route::post('/productos', [ProductoController::class,'store']);
-Route::put('/productos/{id}', [ProductoController::class,'update']);
 
 
-// Rutas categorias
+Route::post('/login', [AuthController::class, 'login']);
 
-Route::get('/categorias', [CategoriaController::class, 'index']);
-Route::get('/categorias/{id}/productos', [ProductoController::class, 'porCategoria']);
 
-// Route::get('/categorias/{id}', [CategoriaController::class, 'show']);
+

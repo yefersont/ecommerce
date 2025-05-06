@@ -1,50 +1,74 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import MainLayout from "./Layouts/MainLayouts";
 import Productos from "./pages/productos";
 import ProductoDetalle from "./pages/productos/ProductoDetalle";
 import ProductosPorCategoria from "./pages/productos/ProductoPorCategoria";
+import Login from "./pages/login/Login";
+import ProtectedRoute from "./components/ProtectedRoute";
+import axios from "axios";
 
+
+const token = localStorage.getItem("token");
+if (token) {
+  axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+}
 function App() {
+
+  useEffect(() => {
+    axios.interceptors.response.use(
+      (response) => response, 
+      (error) => {
+        if (error.response?.status === 401) {
+          // El token ha expirado
+          localStorage.removeItem("token");  // Limpia el token almacenado
+          window.location.href = "/login";    // Redirige al login
+        }
+        return Promise.reject(error);
+      }
+    );
+  }, [])
+
+
   return (
     <Routes>
-      {/* Ruta raíz que redirige a /productos */}
+      {/* Ruta de login */}
       <Route
-        index
-        element={
-          <MainLayout>
-            <Productos />
-          </MainLayout>
-        }
+        path="/login"
+        element={<Login/>}
       />
-      {/* Ruta para productos */}
+
+      {/* Rutas protegidas */}
       <Route
         path="/productos"
         element={
-          <MainLayout>
-            <Productos />
-          </MainLayout>
+          <ProtectedRoute>
+            <MainLayout>
+              <Productos />
+            </MainLayout>
+          </ProtectedRoute>
         }
       />
-      {/* Ruta para el detalle de un producto */}
       <Route
         path="/producto/:id"
         element={
-          <MainLayout>
-            <ProductoDetalle />
-          </MainLayout>
+          <ProtectedRoute>
+            <MainLayout>
+              <ProductoDetalle />
+            </MainLayout>
+          </ProtectedRoute>
         }
       />
-      <Route 
-        path="/categoria/:id" 
+      <Route
+        path="/categoria/:id"
         element={
-        
-          <MainLayout>
-            <ProductosPorCategoria/>
-          </MainLayout>  
-          
-        } />
-
+          <ProtectedRoute>
+            <MainLayout>
+              <ProductosPorCategoria />
+            </MainLayout>
+          </ProtectedRoute>
+        }
+      />
     </Routes>
   );
 }
