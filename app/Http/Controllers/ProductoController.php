@@ -26,13 +26,12 @@ class ProductoController extends Controller
         return response()->json($productos, 200, [], JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_IGNORE);
     }
 
-    public function buscar(Request $request){
+    public function buscar(Request $request)
+    {
 
         $nombre = $request->input('nombre');
 
         $productos = Product::where('Nombre', 'like', '%' . $nombre . '%')->get();
-    
-        
         foreach ($productos as $producto) {
             if ($producto->Imagen) {
                 $producto->Imagen = base64_encode($producto->Imagen);
@@ -40,8 +39,33 @@ class ProductoController extends Controller
         }
 
         return response()->json($productos, 200, [], JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_IGNORE);
-
     }
+
+    public function filtrar(Request $request)
+    {
+        $query = Product::query();
+
+        if ($request->filled('Nombre')) {
+            $query->where('Nombre', 'like', '%' . $request->Nombre . '%');
+        }
+
+        if ($request->filled('Categoria_idCategoria')) {
+            $query->where('Categoria_idCategoria', $request->Categoria_idCategoria);
+        }
+
+        $productos = $query->get();
+
+        // Convertir imágenes a base64
+        foreach ($productos as $producto) {
+            if ($producto->Imagen) {
+                $producto->Imagen = base64_encode($producto->Imagen);
+            }
+        }
+
+        return response()->json($productos, 200, [], JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_IGNORE);
+    }
+
+
 
     /**
      * Store a newly created resource in storage.
@@ -77,8 +101,6 @@ class ProductoController extends Controller
         return response()->json([
             'message' => 'Producto registrado exitosamente'
         ], 201);
-
-
     }
 
     /**
@@ -87,15 +109,15 @@ class ProductoController extends Controller
     public function show($id)
     {
         $producto = Product::find($id);
-    
+
         if (!$producto) {
             return response()->json(['error' => 'Producto no encontrado'], 404);
         }
-    
+
         if ($producto->Imagen) {
             $producto->Imagen = base64_encode($producto->Imagen);
         }
-    
+
         return response()->json($producto, 200, [], JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_IGNORE);
     }
 
@@ -111,7 +133,7 @@ class ProductoController extends Controller
         return response()->json($productos);
     }
 
-    
+
     /**
      * Update the specified resource in storage.
      */
@@ -126,13 +148,13 @@ class ProductoController extends Controller
             'Imagen' => $request->hasFile('Imagen') ? 'image|max:2048' : '',
 
         ]);
-    
+
         $product = Product::findOrFail($id);
-    
+
         if ($request->hasFile('Imagen')) {
             $product->Imagen = file_get_contents($request->file('Imagen')->getRealPath());
         }
-    
+
         $camposActualizar = [
             'Nombre' => $request->Nombre,
             'Descripcion' => $request->Descripcion,
@@ -140,17 +162,17 @@ class ProductoController extends Controller
             'Precio' => $request->Precio,
             'Stock' => $request->Stock,
         ];
-    
+
         if ($request->hasFile('Imagen')) {
             $camposActualizar['Imagen'] = $product->Imagen;
         }
-    
+
         $product->update($camposActualizar);
-    
+
         return response()->json(['message' => 'Producto actualizado correctamente']);
     }
-    
-    
+
+
     /**
      * Remove the specified resource from storage.
      */
@@ -158,7 +180,7 @@ class ProductoController extends Controller
     {
         try {
             $producto->delete();
-    
+
             return response()->json([
                 "message" => "Producto eliminado con éxito"
             ]);

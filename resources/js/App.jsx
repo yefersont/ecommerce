@@ -3,10 +3,11 @@ import { Routes, Route } from "react-router-dom";
 import MainLayout from "./Layouts/MainLayouts";
 import Productos from "./pages/productos";
 import ProductoDetalle from "./pages/productos/ProductoDetalle";
-import ProductosPorCategoria from "./pages/productos/ProductoPorCategoria";
+// import ProductosPorCategoria from "./pages/productos/ProductoPorCategoria";
 import Login from "./pages/login/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
 import axios from "axios";
+import Usuarios from "./pages/usuarios/Usuarios";
 
 
 const token = localStorage.getItem("token");
@@ -17,12 +18,12 @@ function App() {
 
   useEffect(() => {
     axios.interceptors.response.use(
-      (response) => response, 
+      (response) => response,
       (error) => {
         if (error.response?.status === 401) {
           // El token ha expirado
-          localStorage.removeItem("token");  // Limpia el token almacenado
-          window.location.href = "/login";    // Redirige al login
+          localStorage.removeItem("token");
+          window.location.href = "/login";
         }
         return Promise.reject(error);
       }
@@ -35,7 +36,7 @@ function App() {
       {/* Ruta de login */}
       <Route
         path="/login"
-        element={<Login/>}
+        element={<Login />}
       />
 
       {/* Rutas protegidas */}
@@ -59,12 +60,15 @@ function App() {
           </ProtectedRoute>
         }
       />
+
+
+      {/* Rutas protegidas */}
       <Route
-        path="/categoria/:id"
+        path="/usuarios"
         element={
           <ProtectedRoute>
             <MainLayout>
-              <ProductosPorCategoria />
+              <Usuarios />
             </MainLayout>
           </ProtectedRoute>
         }

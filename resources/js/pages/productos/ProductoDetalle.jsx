@@ -4,7 +4,7 @@ import { Pen, Trash2, ShoppingCart, X } from "lucide-react";
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 import Swal from "sweetalert2";
-import Modal from "../../components/Modal"; 
+import Modal from "../../components/Modal";
 import ProductoFormEditar from "../productos/ProductoFormEditar";
 
 
@@ -33,7 +33,7 @@ const ProductoDetalle = () => {
   if (!producto) return <div className="p-4">Cargando producto...</div>;
   const imagenSrc = producto.Imagen
     ? `data:image/jpeg;base64,${producto.Imagen}`
-    : "https://via.placeholder.com/150";
+    : "sexo";
 
   // Función para manejar el movimiento del mouse sobre la imagen
   const handleMouseMove = (e) => {
@@ -69,57 +69,57 @@ const ProductoDetalle = () => {
 
   const addToCart = () => {
 
-    
+
     console.log({
       Productos_idProducts: parseInt(id),
       Cantidad: cantidad,
       Usuarios_idUsuarios: parseInt(idUsuario)
     });
-    axios.post(`http://127.0.0.1:8000/api/carrito`,{
+    axios.post(`http://127.0.0.1:8000/api/carrito`, {
       Productos_idProducts: id,
       Cantidad: cantidad,
       Usuarios_idUsuarios: idUsuario
-    })  
-    .then(() =>{
-      Swal.fire({
-        title: '¡Agregado al Carrito!',
-        icon: 'success',
-        confirmButtonText: 'Aceptar'
-      })
     })
-    .catch(() =>{
+      .then(() => {
+        Swal.fire({
+          title: '¡Agregado al Carrito!',
+          icon: 'success',
+          confirmButtonText: 'Aceptar'
+        })
+      })
+      .catch(() => {
 
-      Swal.fire({
-        title: 'Error al agreagar al Carrito!',
-        icon: 'warning',
-        confirmButtonText: 'Aceptar'
+        Swal.fire({
+          title: 'Error al agreagar al Carrito!',
+          icon: 'warning',
+          confirmButtonText: 'Aceptar'
+        })
+
       })
-      
-    })
   };
 
   return (
-  <div className="p-6 bg-gray-100 min-h">
+    <div className="p-6 bg-gray-100 min-h">
 
-    <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-8">
-{/* Imagen con zoom */}
-      <div className="bg-white p-4 rounded-lg shadow w-full md:w-[450px]">
+      <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-8">
+        {/* Imagen con zoom */}
+        <div className="bg-white p-4 rounded-lg shadow w-full md:w-[450px]">
 
-        <div
-          className="cursor-pointer group w-[400px] h-[400px] overflow-hidden border rounded-lg"
-          onMouseEnter={() => setIsZoomed(true)} 
-          onMouseLeave={() => setIsZoomed(false)}
-          onClick={() => setModalImagenAbierto(true)}  // Abre el modal de imagen
-          onMouseMove={handleMouseMove} 
-          style={{
-            backgroundImage: `url(${imagenSrc})`,
-            backgroundSize: isZoomed ? "200%" : "100%", // Zoom solo cuando está activado
-            backgroundPosition: `${(zoomPos.x / 400) * 100}% ${(zoomPos.y / 400) * 100}%`, // Zoom basado en la posición del mouse
-            backgroundRepeat: "no-repeat",
-          }}
-        ></div>
-      </div>
-      
+          <div
+            className="cursor-pointer group w-[400px] h-[400px] overflow-hidden border rounded-lg"
+            onMouseEnter={() => setIsZoomed(true)}
+            onMouseLeave={() => setIsZoomed(false)}
+            onClick={() => setModalImagenAbierto(true)}  // Abre el modal de imagen
+            onMouseMove={handleMouseMove}
+            style={{
+              backgroundImage: `url(${imagenSrc})`,
+              backgroundSize: isZoomed ? "200%" : "100%", // Zoom solo cuando está activado
+              backgroundPosition: `${(zoomPos.x / 400) * 100}% ${(zoomPos.y / 400) * 100}%`, // Zoom basado en la posición del mouse
+              backgroundRepeat: "no-repeat",
+            }}
+          ></div>
+        </div>
+
 
         {/* Detalles del producto */}
         <div className="flex-1 bg-white p-6 rounded-lg shadow">
@@ -133,7 +133,7 @@ const ProductoDetalle = () => {
           </div>
 
           <div className="flex items-center gap-4">
-          {/* Selector de cantidad */}
+            {/* Selector de cantidad */}
             <div className="flex items-center bg-withe-100 rounded-full overflow-hidden shadow-lg">
               <button
                 onClick={() => setCantidad((prev) => Math.max(1, prev - 1))}
@@ -155,7 +155,7 @@ const ProductoDetalle = () => {
                     setCantidad(Math.max(1, valor));
                   }
                 }}
-                                className="w-12 text-center bg-transparent outline-none text-gray-900 font-medium"
+                className="w-12 text-center bg-transparent outline-none text-gray-900 font-medium"
               />
               <button
                 onClick={() =>
@@ -165,37 +165,37 @@ const ProductoDetalle = () => {
               >
                 +
               </button>
+            </div>
           </div>
-        </div>
 
           {/* Boto Agregar al carrito */}
           <div className="flex gap-2 justify-start mt-6">
-            <button 
+            <button
               className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-300 flex items-center"
               onClick={addToCart}
-              >
+            >
               <ShoppingCart size={20} className="mr-2" />
               Agregar al Carrito
             </button>
 
 
             {role === "1" && (
-            <button 
-              className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-300 flex items-center"
-              onClick={() => setModalEditarAbierto(true)} // Abre el modal de edición
-            >
-              <Pen size={20} className="mr-2" />
-              Editar
-            </button>
-                        )}
+              <button
+                className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-300 flex items-center"
+                onClick={() => setModalEditarAbierto(true)} // Abre el modal de edición
+              >
+                <Pen size={20} className="mr-2" />
+                Editar
+              </button>
+            )}
             {role === "1" && (
-            <button 
-              className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-300 flex items-center"
-              onClick={EliminarProducto}
-            >
-              <Trash2 size={20} className="mr-2" />
-              Eliminar
-            </button>
+              <button
+                className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-300 flex items-center"
+                onClick={EliminarProducto}
+              >
+                <Trash2 size={20} className="mr-2" />
+                Eliminar
+              </button>
             )}
 
           </div>
@@ -235,7 +235,7 @@ const ProductoDetalle = () => {
           title="Editar Producto"
         >
           {/* Aquí puedes poner el formulario de edición del producto */}
-          <ProductoFormEditar 
+          <ProductoFormEditar
             producto={producto}
             onClose={() => setModalEditarAbierto(false)}
           />
