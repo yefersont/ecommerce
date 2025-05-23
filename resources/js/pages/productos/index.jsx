@@ -3,6 +3,7 @@ import ProductoCard from "../../components/ProductosCard";
 import { Plus } from "lucide-react";
 import Modal from "../../components/Modal";
 import ProductoForm from "../productos/ProductoForm";
+import Loader from "../../components/Loader";
 import axios from "axios";
 
 const ProductosPage = () => {
@@ -13,10 +14,7 @@ const ProductosPage = () => {
     const [busqueda, setBusqueda] = useState("");
     const [PrecioSeleccionado, setPrecioSeleccionado] = useState("");
     const role = localStorage.getItem("role");
-
-
-
-
+    const [loading, setLoading] = useState(false);
 
     const fetchCategorias = () => {
         axios
@@ -30,33 +28,37 @@ const ProductosPage = () => {
     };
 
     const filtrarProductos = (nombre, categoriaId, rangoPrecio) => {
-    const params = new URLSearchParams();
 
-    if (nombre) params.append("Nombre", nombre);
-    if (categoriaId) params.append("Categoria_idCategoria", categoriaId);
+        setLoading(true);
 
-    if (rangoPrecio) {
-        const [min, max] = rangoPrecio.split("-");
-        params.append("PrecioMin", min);
-        params.append("PrecioMax", max);
-    }
+        const params = new URLSearchParams();
 
-    axios
-    .get(`http://127.0.0.1:8000/api/productos/filtrar?${params.toString()}`)
-    .then(response => {
-      console.log("Respuesta del backend:", response.data);
-      setProductos(response.data);
-    })
-    .catch(error => {
-      console.error("Error al filtrar productos:", error);
-    });
-};
+        if (nombre) params.append("Nombre", nombre);
+        if (categoriaId) params.append("Categoria_idCategoria", categoriaId);
 
+        if (rangoPrecio) {
+            const [min, max] = rangoPrecio.split("-");
+            params.append("PrecioMin", min);
+            params.append("PrecioMax", max);
+        }
 
-    useEffect(() => {
-        filtrarProductos(busqueda, categoriaSeleccionada, PrecioSeleccionado);
-        fetchCategorias();
-    }, []);
+            axios
+            .get(`http://127.0.0.1:8000/api/productos/filtrar?${params.toString()}`)
+            .then(response => {
+                console.log("Respuesta del backend:", response.data);
+                setProductos(response.data);
+            })
+            .catch(error => {
+                console.error("Error al filtrar productos:", error);
+            })
+            .finally(() =>{
+                setLoading(false);
+            });
+        };
+        useEffect(() => {
+            filtrarProductos(busqueda, categoriaSeleccionada, PrecioSeleccionado);
+            fetchCategorias();
+        }, []);
 
     return (
         <div className="p-4">
@@ -125,14 +127,18 @@ const ProductosPage = () => {
                 </div>
             </div>
 
+            {loading ? (
+            <Loader />
+            ) : (
             <div className="flex flex-col gap-4">
                 {productos.map((producto) => (
-                    <ProductoCard
-                        key={producto.idProductos}
-                        producto={producto}
-                    />
+                <ProductoCard
+                    key={producto.idProductos}
+                    producto={producto}
+                />
                 ))}
             </div>
+            )}
 
             <Modal
                 isOpen={modalAbierto}
