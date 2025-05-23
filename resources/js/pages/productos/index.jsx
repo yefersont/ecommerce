@@ -11,6 +11,7 @@ const ProductosPage = () => {
     const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("");
     const [modalAbierto, setModalAbierto] = useState(false);
     const [busqueda, setBusqueda] = useState("");
+    const [PrecioSeleccionado, setPrecioSeleccionado] = useState("");
     const role = localStorage.getItem("role");
 
 
@@ -28,27 +29,33 @@ const ProductosPage = () => {
             );
     };
 
-    const filtrarProductos = (nombre, categoriaId) => {
-        const params = new URLSearchParams();
-        if (nombre) params.append("Nombre", nombre);
-        if (categoriaId) params.append("Categoria_idCategoria", categoriaId);
+    const filtrarProductos = (nombre, categoriaId, rangoPrecio) => {
+    const params = new URLSearchParams();
 
-        axios
-            .get(`http://127.0.0.1:8000/api/productos/filtrar?${params.toString()}`)
-            .then(response => {
-                console.log("Respuesta del backend:", response.data);
-                setProductos(response.data);
-            })
-            .catch(error => {
-                console.error("Error al filtrar productos:", error);
-            });
-    };
+    if (nombre) params.append("Nombre", nombre);
+    if (categoriaId) params.append("Categoria_idCategoria", categoriaId);
+
+    if (rangoPrecio) {
+        const [min, max] = rangoPrecio.split("-");
+        params.append("PrecioMin", min);
+        params.append("PrecioMax", max);
+    }
+
+    axios
+    .get(`http://127.0.0.1:8000/api/productos/filtrar?${params.toString()}`)
+    .then(response => {
+      console.log("Respuesta del backend:", response.data);
+      setProductos(response.data);
+    })
+    .catch(error => {
+      console.error("Error al filtrar productos:", error);
+    });
+};
 
 
     useEffect(() => {
-        filtrarProductos(busqueda, categoriaSeleccionada);
+        filtrarProductos(busqueda, categoriaSeleccionada, PrecioSeleccionado);
         fetchCategorias();
-        
     }, []);
 
     return (
@@ -68,10 +75,19 @@ const ProductosPage = () => {
                     <div className="flex w-full max-w-3xl mx-auto">
                         {/* <h3 className="text-gray-700 text-sm">filtrar por:</h3> */}
                         <select
-                            className="border-t border-b border-l  border-gray-300 rounded-l-md px-4 py-2 bg-gray-100 text-sm text-gray-700 focus:outline-none"
+                        className="border-t border-b border-l border-gray-300 rounded-l-md px-4 py-2 bg-gray-100 text-sm text-gray-700 focus:outline-none"
+                        value={PrecioSeleccionado}
+                        onChange={(e) => {
+                            const precio = e.target.value;
+                            setPrecioSeleccionado(precio);
+                            filtrarProductos(busqueda, categoriaSeleccionada, precio);
+                        }}
                         >
                             <option value="">Todos los precios</option>
-                            <option value="">00.0 - 200.0</option>
+                            <option value="0-200">0 USD - 200 USD</option>
+                            <option value="201-500">201 USD - 500 USD</option>
+                            <option value="501-1000">501 USD - 1000 USD</option>
+                            <option value="1001-1500">1001 USD - 1500 USD</option>
                         </select>
 
                         <select
@@ -80,7 +96,7 @@ const ProductosPage = () => {
                             onChange={(e) => {
                                 const id = e.target.value;
                                 setCategoriaSeleccionada(id);
-                                filtrarProductos(busqueda, id);
+                                filtrarProductos(busqueda, id, PrecioSeleccionado);
                             }}
                         >
                             <option value="">Todas las categorías</option>
@@ -102,7 +118,7 @@ const ProductosPage = () => {
                             onChange={(e) => {
                                 const valor = e.target.value;
                                 setBusqueda(valor);
-                                filtrarProductos(valor, categoriaSeleccionada);
+                                filtrarProductos(valor, categoriaSeleccionada, PrecioSeleccionado);
                             }}
                         />
                     </div>

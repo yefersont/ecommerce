@@ -53,9 +53,12 @@ class ProductoController extends Controller
             $query->where('Categoria_idCategoria', $request->Categoria_idCategoria);
         }
 
+        if ($request->filled('PrecioMin') && $request->filled('PrecioMax')) {
+            $query->whereBetween('Precio', [$request->PrecioMin, $request->PrecioMax]);
+        }
+
         $productos = $query->get();
 
-        // Convertir imágenes a base64
         foreach ($productos as $producto) {
             if ($producto->Imagen) {
                 $producto->Imagen = base64_encode($producto->Imagen);
