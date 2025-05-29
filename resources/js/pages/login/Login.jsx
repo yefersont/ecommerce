@@ -1,90 +1,108 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import { UserIcon, LockKeyhole } from 'lucide-react';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { UserIcon, LockKeyhole } from "lucide-react";
 
 const Login = () => {
-  const [user, setUser] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const navigate = useNavigate();
+    const [user, setUser] = useState("");
+    const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
+    const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setError('');
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (token) {
+            navigate("/productos");
+        }
+    }, []);
 
-    try {
-      const response = await axios.post('http://127.0.0.1:8000/api/login', {
-        User: user,
-        Password: password,
-      });
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        setError("");
 
-      const { access_token, User: userData } = response.data;
+        try {
+            const response = await axios.post(
+                "http://127.0.0.1:8000/api/login",
+                {
+                    User: user,
+                    Password: password,
+                }
+            );
 
-      localStorage.setItem('token', access_token);
-      localStorage.setItem('user', JSON.stringify(userData));
-      localStorage.setItem('idUsuarios', userData.idUsuarios);
-      localStorage.setItem('role', userData.RollSuario_idTp_Rol);
+            const { access_token, User: userData } = response.data;
 
-      axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
-      navigate('/productos');
-    } catch (err) {
-      setError('Credenciales incorrectas');
-    }
-  };
+            localStorage.setItem("token", access_token);
+            localStorage.setItem("user", JSON.stringify(userData));
+            localStorage.setItem("idUsuarios", userData.idUsuarios);
+            localStorage.setItem("role", userData.RollSuario_idTp_Rol);
 
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-      <div className="w-full max-w-md bg-white shadow-xl rounded-xl p-8 space-y-6 border border-gray-200">
-        {/* Logo ficticio tipo Amazon */}
-        <div className="text-3xl font-bold text-yellow-500 text-center tracking-wide">
-          <span className="text-black">E-e</span>commerce
+            axios.defaults.headers.common[
+                "Authorization"
+            ] = `Bearer ${access_token}`;
+            navigate("/productos");
+        } catch (err) {
+            setError("Credenciales incorrectas");
+        }
+    };
+
+    return (
+        <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+            <div className="w-full max-w-md bg-white shadow-xl rounded-xl p-8 space-y-6 border border-gray-200">
+                {/* Logo ficticio tipo Amazon */}
+                <div className="text-3xl font-bold text-yellow-500 text-center tracking-wide">
+                    <span className="text-black">E-e</span>commerce
+                </div>
+
+                <div className="space-y-1 text-center">
+                    <h2 className="text-xl font-semibold text-gray-800">
+                        Iniciar sesión
+                    </h2>
+                    <p className="text-sm text-gray-500">
+                        Bienvenido, por favor ingresa tus datos
+                    </p>
+                </div>
+
+                {error && (
+                    <p className="text-red-500 text-sm text-center">{error}</p>
+                )}
+
+                <form onSubmit={handleLogin} className="space-y-4">
+                    <div className="flex items-center gap-2 border border-gray-300 rounded-lg px-3 py-2 focus-within:border-yellow-500">
+                        <UserIcon className="h-5 w-5 text-gray-400" />
+                        <input
+                            type="text"
+                            placeholder="Usuario"
+                            value={user}
+                            onChange={(e) => setUser(e.target.value)}
+                            className="w-full outline-none text-sm text-gray-700 bg-transparent"
+                        />
+                    </div>
+
+                    <div className="flex items-center gap-2 border border-gray-300 rounded-lg px-3 py-2 focus-within:border-yellow-500">
+                        <LockKeyhole className="h-5 w-5 text-gray-400" />
+                        <input
+                            type="password"
+                            placeholder="Contraseña"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            className="w-full outline-none text-sm text-gray-700 bg-transparent"
+                        />
+                    </div>
+
+                    <button
+                        type="submit"
+                        className="w-full py-2 bg-yellow-400 hover:bg-yellow-500 text-black font-semibold rounded-lg transition shadow-sm"
+                    >
+                        Ingresar
+                    </button>
+                </form>
+
+                <div className="text-xs text-gray-500 text-center pt-2 hover:underline cursor-pointer">
+                    ¿Olvidaste tu contraseña?
+                </div>
+            </div>
         </div>
-
-        <div className="space-y-1 text-center">
-          <h2 className="text-xl font-semibold text-gray-800">Iniciar sesión</h2>
-          <p className="text-sm text-gray-500">Bienvenido, por favor ingresa tus datos</p>
-        </div>
-
-        {error && <p className="text-red-500 text-sm text-center">{error}</p>}
-
-        <form onSubmit={handleLogin} className="space-y-4">
-          <div className="flex items-center gap-2 border border-gray-300 rounded-lg px-3 py-2 focus-within:border-yellow-500">
-            <UserIcon className="h-5 w-5 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Usuario"
-              value={user}
-              onChange={(e) => setUser(e.target.value)}
-              className="w-full outline-none text-sm text-gray-700 bg-transparent"
-            />
-          </div>
-
-          <div className="flex items-center gap-2 border border-gray-300 rounded-lg px-3 py-2 focus-within:border-yellow-500">
-            <LockKeyhole className="h-5 w-5 text-gray-400" />
-            <input
-              type="password"
-              placeholder="Contraseña"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full outline-none text-sm text-gray-700 bg-transparent"
-            />
-          </div>
-
-          <button
-            type="submit"
-            className="w-full py-2 bg-yellow-400 hover:bg-yellow-500 text-black font-semibold rounded-lg transition shadow-sm"
-          >
-            Ingresar
-          </button>
-        </form>
-
-        <div className="text-xs text-gray-500 text-center pt-2 hover:underline cursor-pointer">
-          ¿Olvidaste tu contraseña?
-        </div>
-      </div>
-    </div>
-  );
+    );
 };
 
 export default Login;

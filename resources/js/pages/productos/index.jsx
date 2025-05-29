@@ -90,6 +90,9 @@ const ProductosPage = () => {
                             <option value="201-500">201 USD - 500 USD</option>
                             <option value="501-1000">501 USD - 1000 USD</option>
                             <option value="1001-1500">1001 USD - 1500 USD</option>
+                            <option value=""> Ilenia 316 045 02 66 </option>
+                            <option value=""> Stefany 324 523 67 59</option>
+                            <option value=""> Alexandra 310 842 16 52</option>
                         </select>
 
                         <select
