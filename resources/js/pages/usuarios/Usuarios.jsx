@@ -16,8 +16,8 @@ const Usuarios = () => {
 
     //  Se definen las claves de las tablas
     const columns = [
-        { accessorKey: "idUsuarios", header: "ID", },
-        { accessorKey: "Name", header: "Nombre", },
+        { accessorKey: "idUsuarios", header: "ID" },
+        { accessorKey: "Name", header: "Nombre" },
         { accessorKey: "User", header: "Usuario" },
         { accessorKey: "rolusuario", header: "Rol" },
         {
@@ -25,21 +25,18 @@ const Usuarios = () => {
 
             cell: ({ row }) => (
                 <div>
-                    <button
-                        className="px-5 py-1 bg-yellow-500 text-white rounded  hover:bg-yellow-200 mr-4 ml-3"
-
-                    >
-                        Editar</button>
-                    <button
-                        className="px-5 py-1 bg-red-500 text-white rounded hover:bg-red-200 ml-4 mr-3"
-                    >
-                        Eliminar</button>
+                    <button className="px-5 py-1 bg-yellow-500 text-white rounded  hover:bg-yellow-200 mr-4 ml-3">
+                        Editar
+                    </button>
+                    <button className="px-5 py-1 bg-red-500 text-white rounded hover:bg-red-200 ml-4 mr-3">
+                        Eliminar
+                    </button>
                 </div>
-            )
-        }
+            ),
+        },
     ];
 
-    //  Funciones de la paginacion 
+    //  Funciones de la paginacion
     const table = useReactTable({
         data: usuarios,
         columns,
@@ -94,7 +91,10 @@ const Usuarios = () => {
                         <tr key={headerGroup.id}>
                             {headerGroup.headers.map((header) => (
                                 <th key={header.id} className="p-2 border">
-                                    {flexRender(header.column.columnDef.header, header.getContext())}
+                                    {flexRender(
+                                        header.column.columnDef.header,
+                                        header.getContext()
+                                    )}
                                 </th>
                             ))}
                         </tr>
@@ -106,14 +106,16 @@ const Usuarios = () => {
                         <tr key={row.id} className="hover:bg-gray-100">
                             {row.getVisibleCells().map((cell) => (
                                 <td key={cell.id} className="p-2 border">
-                                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                    {flexRender(
+                                        cell.column.columnDef.cell,
+                                        cell.getContext()
+                                    )}
                                 </td>
                             ))}
                         </tr>
                     ))}
                 </tbody>
             </table>
-
 
             {/* Paginacion */}
 

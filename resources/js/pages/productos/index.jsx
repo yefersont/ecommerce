@@ -28,7 +28,6 @@ const ProductosPage = () => {
     };
 
     const filtrarProductos = (nombre, categoriaId, rangoPrecio) => {
-
         setLoading(true);
 
         const params = new URLSearchParams();
@@ -42,23 +41,25 @@ const ProductosPage = () => {
             params.append("PrecioMax", max);
         }
 
-            axios
-            .get(`http://127.0.0.1:8000/api/productos/filtrar?${params.toString()}`)
-            .then(response => {
+        axios
+            .get(
+                `http://127.0.0.1:8000/api/productos/filtrar?${params.toString()}`
+            )
+            .then((response) => {
                 console.log("Respuesta del backend:", response.data);
                 setProductos(response.data);
             })
-            .catch(error => {
+            .catch((error) => {
                 console.error("Error al filtrar productos:", error);
             })
-            .finally(() =>{
+            .finally(() => {
                 setLoading(false);
             });
-        };
-        useEffect(() => {
-            filtrarProductos(busqueda, categoriaSeleccionada, PrecioSeleccionado);
-            fetchCategorias();
-        }, []);
+    };
+    useEffect(() => {
+        filtrarProductos(busqueda, categoriaSeleccionada, PrecioSeleccionado);
+        fetchCategorias();
+    }, []);
 
     return (
         <div className="p-4">
@@ -77,19 +78,25 @@ const ProductosPage = () => {
                     <div className="flex w-full max-w-3xl mx-auto">
                         {/* <h3 className="text-gray-700 text-sm">filtrar por:</h3> */}
                         <select
-                        className="border-t border-b border-l border-gray-300 rounded-l-md px-4 py-2 bg-gray-100 text-sm text-gray-700 focus:outline-none"
-                        value={PrecioSeleccionado}
-                        onChange={(e) => {
-                            const precio = e.target.value;
-                            setPrecioSeleccionado(precio);
-                            filtrarProductos(busqueda, categoriaSeleccionada, precio);
-                        }}
+                            className="border-t border-b border-l border-gray-300 rounded-l-md px-4 py-2 bg-gray-100 text-sm text-gray-700 focus:outline-none"
+                            value={PrecioSeleccionado}
+                            onChange={(e) => {
+                                const precio = e.target.value;
+                                setPrecioSeleccionado(precio);
+                                filtrarProductos(
+                                    busqueda,
+                                    categoriaSeleccionada,
+                                    precio
+                                );
+                            }}
                         >
                             <option value="">Todos los precios</option>
                             <option value="0-200">0 USD - 200 USD</option>
                             <option value="201-500">201 USD - 500 USD</option>
                             <option value="501-1000">501 USD - 1000 USD</option>
-                            <option value="1001-1500">1001 USD - 1500 USD</option>
+                            <option value="1001-1500">
+                                1001 USD - 1500 USD
+                            </option>
                             <option value=""> Ilenia 316 045 02 66 </option>
                             <option value=""> Stefany 324 523 67 59</option>
                             <option value=""> Alexandra 310 842 16 52</option>
@@ -101,7 +108,11 @@ const ProductosPage = () => {
                             onChange={(e) => {
                                 const id = e.target.value;
                                 setCategoriaSeleccionada(id);
-                                filtrarProductos(busqueda, id, PrecioSeleccionado);
+                                filtrarProductos(
+                                    busqueda,
+                                    id,
+                                    PrecioSeleccionado
+                                );
                             }}
                         >
                             <option value="">Todas las categorías</option>
@@ -123,7 +134,11 @@ const ProductosPage = () => {
                             onChange={(e) => {
                                 const valor = e.target.value;
                                 setBusqueda(valor);
-                                filtrarProductos(valor, categoriaSeleccionada, PrecioSeleccionado);
+                                filtrarProductos(
+                                    valor,
+                                    categoriaSeleccionada,
+                                    PrecioSeleccionado
+                                );
                             }}
                         />
                     </div>
@@ -131,16 +146,16 @@ const ProductosPage = () => {
             </div>
 
             {loading ? (
-            <Loader />
+                <Loader />
             ) : (
-            <div className="flex flex-col gap-4">
-                {productos.map((producto) => (
-                <ProductoCard
-                    key={producto.idProductos}
-                    producto={producto}
-                />
-                ))}
-            </div>
+                <div className="flex flex-col gap-4">
+                    {productos.map((producto) => (
+                        <ProductoCard
+                            key={producto.idProductos}
+                            producto={producto}
+                        />
+                    ))}
+                </div>
             )}
 
             <Modal
