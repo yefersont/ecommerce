@@ -35,8 +35,8 @@ class Tarjeta extends Model
 		'Saldo'
 	];
 
-	public function metodospagos()
+	public function ordens()
 	{
-		return $this->hasMany(Metodospago::class, 'Tarjetas_idTarjetas');
+		return $this->hasMany(Orden::class, 'Tarjetas_idTarjetas');
 	}
 }

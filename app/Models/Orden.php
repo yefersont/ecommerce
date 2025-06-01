@@ -58,6 +58,10 @@ class Orden extends Model
 	{
 		return $this->belongsTo(Metodospago::class, 'MetodosPago_idMetodosPago');
 	}
+	public function tarjeta()
+	{
+		return $this->belongsTo(Tarjeta::class, 'Tarjetas_idTarjetas');
+	}
 
 	public function status()
 	{

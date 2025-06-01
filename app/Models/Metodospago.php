@@ -27,19 +27,11 @@ class Metodospago extends Model
 	protected $primaryKey = 'idMetodosPago';
 	public $timestamps = false;
 
-	protected $casts = [
-		'Tarjetas_idTarjetas' => 'int'
-	];
-
 	protected $fillable = [
 		'Description',
-		'Tarjetas_idTarjetas'
 	];
 
-	public function tarjeta()
-	{
-		return $this->belongsTo(Tarjeta::class, 'Tarjetas_idTarjetas');
-	}
+
 
 	public function ordens()
 	{

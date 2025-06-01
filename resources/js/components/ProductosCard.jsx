@@ -1,15 +1,15 @@
 import React from "react";
 import { Link } from "react-router-dom";
-
 import { ShoppingCart, Pen, Trash2 } from "lucide-react";
 
 const ProductoCard = ({ producto }) => {
     return (
-        <div className="bg-white border rounded-md p-4 shadow-sm hover:shadow-md transition-shadow duration-300 flex w-full relative">
-            {/* Imagen */}
-
-            <Link to={`/producto/${producto.idProductos}`} className="flex-1 flex gap-4">
-                <div className="w-32 h-32 flex items-center justify-center border rounded-md bg-white p-2 flex-shrink-0">
+        <div className="bg-gray-100 border-t p-4 flex w-full relative hover:shadow-md transition-shadow duration-300">
+            <Link
+                to={`/producto/${producto.idProductos}`}
+                className="flex-1 flex gap-4"
+            >
+                <div className="w-32 h-32 flex items-center justify-center rounded-md bg-white p-2 flex-shrink-0">
                     <img
                         src={`data:image/jpeg;base64,${producto.Imagen}`}
                         alt={producto.Nombre}
@@ -29,7 +29,6 @@ const ProductoCard = ({ producto }) => {
                             ${producto.Precio}
                         </div>
                     </div>
-
                 </div>
             </Link>
         </div>
