@@ -9,8 +9,11 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import axios from "axios";
 import Usuarios from "./pages/usuarios/Usuarios";
 import CompraDetalle from "./pages/compra/CompraDetalle";
-
+import CompraEnvio from "./pages/compra/CompraForm";
+import SeleccionarTarjeta from "./pages/compra/SeleccionarTarjeta";
+import { CompraProvider } from "./components/context/CompraContext";
 const token = localStorage.getItem("token");
+
 if (token) {
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 }
@@ -30,54 +33,79 @@ function App() {
     }, []);
 
     return (
-        <Routes>
-            {/* Ruta de login */}
-            <Route path="/login" element={<Login />} />
+        <CompraProvider>
+            <Routes>
+                {/* Ruta de login */}
+                <Route path="/login" element={<Login />} />
 
-            {/* Rutas protegidas */}
-            <Route
-                path="/productos"
-                element={
-                    <ProtectedRoute>
-                        <MainLayout>
-                            <Productos />
-                        </MainLayout>
-                    </ProtectedRoute>
-                }
-            />
-            <Route
-                path="/producto/:id"
-                element={
-                    <ProtectedRoute>
-                        <MainLayout>
-                            <ProductoDetalle />
-                        </MainLayout>
-                    </ProtectedRoute>
-                }
-            />
+                {/* Rutas protegidas */}
+                <Route
+                    path="/productos"
+                    element={
+                        <ProtectedRoute>
+                            <MainLayout>
+                                <Productos />
+                            </MainLayout>
+                        </ProtectedRoute>
+                    }
+                />
 
-            {/* Rutas protegidas */}
-            <Route
-                path="/usuarios"
-                element={
-                    <ProtectedRoute>
-                        <MainLayout>
-                            <Usuarios />
-                        </MainLayout>
-                    </ProtectedRoute>
-                }
-            />
-            <Route
-                path="/compra-detalle"
-                element={
-                    <ProtectedRoute>
-                        <MainLayout>
-                            <CompraDetalle />
-                        </MainLayout>
-                    </ProtectedRoute>
-                }
-            />
-        </Routes>
+                <Route
+                    path="/producto/:id"
+                    element={
+                        <ProtectedRoute>
+                            <MainLayout>
+                                <ProductoDetalle />
+                            </MainLayout>
+                        </ProtectedRoute>
+                    }
+                />
+
+                {/* Rutas protegidas */}
+                <Route
+                    path="/usuarios"
+                    element={
+                        <ProtectedRoute>
+                            <MainLayout>
+                                <Usuarios />
+                            </MainLayout>
+                        </ProtectedRoute>
+                    }
+                />
+
+                <Route
+                    path="/compra-detalle"
+                    element={
+                        <ProtectedRoute>
+                            <MainLayout>
+                                <CompraDetalle />
+                            </MainLayout>
+                        </ProtectedRoute>
+                    }
+                />
+
+                <Route
+                    path="/formulario-envio"
+                    element={
+                        <ProtectedRoute>
+                            <MainLayout>
+                                <CompraEnvio />
+                            </MainLayout>
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/seleccionar-tarjeta"
+                    element={
+                        <ProtectedRoute>
+                            <MainLayout>
+                                <SeleccionarTarjeta />
+                            </MainLayout>
+                        </ProtectedRoute>
+                    }
+                />
+            </Routes>
+        </CompraProvider>
     );
 }
 

@@ -11,8 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('metodospago', function (Blueprint $table) {
-            $table->foreign(['Tarjetas_idTarjetas'], 'metodospago_ibfk_1')->references(['idTarjetas'])->on('tarjetas')->onUpdate('restrict')->onDelete('restrict');
+        Schema::create('departamentos', function (Blueprint $table) {
+            $table->bigInteger('idDepartamentos', true);
+            $table->string('nombre');
+            $table->integer('codigo');
         });
     }
 
@@ -21,8 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('metodospago', function (Blueprint $table) {
-            $table->dropForeign('metodospago_ibfk_1');
-        });
+        Schema::dropIfExists('departamentos');
     }
 };

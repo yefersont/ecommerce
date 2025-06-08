@@ -6,10 +6,13 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CarritoController;
+use App\Http\Controllers\CiudadesController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Middleware\CheckTokenExpiry;
 use App\Models\Usuario;
 use App\Http\Controllers\MetodoPagoController;
+use App\Http\Controllers\DepartamentoController;
+use App\Http\Controllers\TarjetaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,26 +39,24 @@ Route::middleware(['auth:sanctum', 'check.token.expiry'])->group(function () {
     Route::post('/productos', [ProductoController::class, 'store']);
     Route::put('/productos/{id}', [ProductoController::class, 'update']);
     // Categorias
-
-
     Route::get('/categorias', [CategoriaController::class, 'index']);
     Route::get('/categorias/{id}/productos', [ProductoController::class, 'porCategoria']);
     // Carrito de compras
-
-
     Route::post('/carrito', [CarritoController::class, 'store']);
     Route::get('/carrito/{idUsuario}', [CarritoController::class, 'ShowbyUser']);
     Route::delete('/carrito/{idUsuario}/vaciar', [CarritoController::class, 'vaciar']);
     Route::get('/carrito/{idUsuario}', [CarritoController::class, 'ShowbyUser']);
     Route::delete('/carrito/{idUsuario}/producto/{idProducto}', [CarritoController::class, 'eliminarProducto']);
     // Usuarios
-
-
     Route::get('/usuarios', [UsuarioController::class, 'index']);
     // Metodos de pago
-
+    Route::get('/metodospago',  [MetodoPagoController::class, 'index']);
+    // Departamentos
+    Route::get('/departamentos', [DepartamentoController::class, 'index']);
+    // Ciudad por departamento
+    Route::get('/departamentos/{id}/ciudades', [CiudadesController::class, 'porDepartamento']);
+    // Tarjeta por usuario
 });
-
-Route::get('/metodospago',  [MetodoPagoController::class, 'index']);
+Route::get('/tarjetas/{id}', [TarjetaController::class, 'TarjetaPorUsuario']);
 
 Route::post('/login', [AuthController::class, 'login']);

@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('metodospago', function (Blueprint $table) {
-            $table->integer('idMetodosPago', true);
-            $table->string('Description', 1000);
-            $table->integer('Tarjetas_idTarjetas')->nullable()->index('tarjetas_idtarjetas');
+        Schema::create('tarjetas', function (Blueprint $table) {
+            $table->integer('idTarjetas', true);
+            $table->string('Description', 1000)->nullable();
+            $table->integer('Usuarios_idUsuarios')->index('tarjetas_ibfk_1');
+            $table->decimal('Saldo', 10)->nullable()->default(0);
         });
     }
 
@@ -23,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('metodospago');
+        Schema::dropIfExists('tarjetas');
     }
 };

@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Tarjeta;
 use Illuminate\Http\Request;
 
-class TarjetaController extends Controller
+class DatosenvioController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -13,14 +12,6 @@ class TarjetaController extends Controller
     public function index()
     {
         //
-    }
-
-    public function TarjetaPorUsuario($id)
-    {
-
-        $tarjeta = Tarjeta::where('Usuarios_idUsuarios', $id)->get();
-
-        return response()->json($tarjeta);
     }
 
     /**
@@ -34,7 +25,7 @@ class TarjetaController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Tarjeta $tarjeta)
+    public function show(string $id)
     {
         //
     }
@@ -42,7 +33,7 @@ class TarjetaController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Tarjeta $tarjeta)
+    public function update(Request $request, string $id)
     {
         //
     }
@@ -50,7 +41,7 @@ class TarjetaController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Tarjeta $tarjeta)
+    public function destroy(string $id)
     {
         //
     }

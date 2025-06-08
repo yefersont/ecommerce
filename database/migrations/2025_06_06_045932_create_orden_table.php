@@ -13,11 +13,12 @@ return new class extends Migration
     {
         Schema::create('orden', function (Blueprint $table) {
             $table->integer('idOrden', true);
-            $table->integer('Usuarios_idUsuarios')->index('usuarios_idusuarios');
             $table->dateTime('Fecha')->nullable()->useCurrent();
             $table->decimal('Total', 10);
             $table->integer('MetodosPago_idMetodosPago')->index('metodospago_idmetodospago');
+            $table->integer('Tarjetas_idTarjetas')->nullable()->index('tarjetas_idtarjetas');
             $table->integer('Status_idStatus')->index('status_idstatus');
+            $table->integer('Datosenvio_idDatosenvio')->index('datosenvio_iddatosenvio');
         });
     }
 

@@ -19,7 +19,13 @@ const MainLayout = ({ children }) => {
         window.location.href = "/login";
     };
 
-    const esCompraDetalle = location.pathname === "/compra-detalle"; // ← condición
+    const rutas = [
+        "/compra-detalle",
+        "/formulario-envio",
+        "/seleccionar-tarjeta",
+    ];
+
+    const estaEnRuta = rutas.includes(location.pathname);
 
     return (
         <div className="font-sans bg-gray-100 min-h-screen">
@@ -61,7 +67,7 @@ const MainLayout = ({ children }) => {
                     )}
 
                     {/* Mostrar botón del carrito solo si NO estamos en /compra-detalle */}
-                    {!esCompraDetalle && (
+                    {!estaEnRuta && (
                         <button
                             onClick={() => setModalAbierto(true)}
                             className="relative flex items-center hover:scale-105 transition"

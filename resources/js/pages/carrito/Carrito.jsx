@@ -1,19 +1,28 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { X } from "lucide-react";
+import { Users, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-
+import Loader from "../../components/Loader";
 const Carrito = ({ onClose }) => {
     const [carrito, setCarrito] = useState([]);
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const idUsuario = localStorage.getItem("idUsuarios");
 
     useEffect(() => {
+        setLoading(true);
         axios
             .get(`http://127.0.0.1:8000/api/carrito/${idUsuario}`)
-            .then((res) => setCarrito(res.data))
-            .catch((err) => console.error("Error al cargar el carrito", err));
+            .then((res) => {
+                setCarrito(res.data);
+            })
+            .catch((err) => {
+                console.error("Error al cargar el carrito", err);
+            })
+            .finally(() => {
+                setLoading(false);
+            });
     }, []);
 
     const vaciarCarrito = () => {
@@ -59,7 +68,7 @@ const Carrito = ({ onClose }) => {
     };
 
     const comprar = () => {
-        navigate("/compra-detalle");
+        navigate("/formulario-envio");
         onClose();
     };
 

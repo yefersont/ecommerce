@@ -2,13 +2,18 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Loader from "../../components/Loader";
 import { RadioGroup } from "@headlessui/react";
+import { Form } from "react-hook-form";
+import { useCompra } from "../../components/context/CompraContext";
+import { useNavigate } from "react-router-dom";
 
 const CompraDetalle = () => {
     const [detalle, setDetalle] = useState([]);
     const [metodoPago, setMetodoPago] = useState("");
     const [metodosPago, setMetodosPago] = useState([]);
+    const { setMetodoPagoContext } = useCompra();
     const idUsuario = localStorage.getItem("idUsuarios");
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         setLoading(true);
@@ -45,12 +50,15 @@ const CompraDetalle = () => {
         return acc + item.product.Precio * item.Cantidad;
     }, 0);
 
-    const confirmarCompra = () => {
+    const onSubmit = (e) => {
+        e.preventDefault(); // ⛔️ evita la recarga
         if (!metodoPago) {
             alert("Selecciona un método de pago");
             return;
         }
-        alert(`Compra confirmada con método de pago ID: ${metodoPago}`);
+        setMetodoPagoContext(metodoPago);
+        console.log(metodoPago);
+        navigate("/seleccionar-tarjeta");
     };
 
     return (
@@ -58,61 +66,66 @@ const CompraDetalle = () => {
             {loading ? (
                 <Loader />
             ) : (
-                <div className="relative min-h-screen bg-gray-100 py-6 max-w-6xl mx-auto flex px-0">
-                    {/* Izquierda: productos */}
-                    <div className="w-2/3 bg-gray-100 overflow-y-auto border-r border-gray-300 p-4">
-                        <h2 className="text-2xl font-bold mb-6">
-                            Detalles de la Compra
-                        </h2>
+                <form onSubmit={onSubmit}>
+                    <div className="relative min-h-screen bg-gray-100 py-6 max-w-6xl mx-auto flex px-0">
+                        {/* Izquierda: productos */}
+                        <div className="w-2/3 bg-gray-100 overflow-y-auto border-r border-gray-300 p-4">
+                            <h2 className="text-2xl font-bold mb-6">
+                                Detalles de la Compra
+                            </h2>
 
-                        {detalle.map((item) => (
-                            <div
-                                key={item.idCarrito}
-                                className="flex gap-4 items-center mb-4 p-4 bg-gray-100 border-t border-gray-300"
-                            >
-                                <img
-                                    src={`data:image/jpeg;base64,${item.product.Imagen}`}
-                                    alt={item.product.Nombre}
-                                    className="w-20 h-20 object-cover rounded"
-                                />
-                                <div>
-                                    <p className="font-semibold">
-                                        {item.product.Nombre}
-                                    </p>
-                                    <p className="text-sm text-gray-500">
-                                        Precio: ${item.product.Precio}
-                                    </p>
-                                    <p className="text-sm text-gray-500">
-                                        Cantidad: {item.Cantidad}
-                                    </p>
-                                    <p className="text-sm text-gray-500">
-                                        Subtotal: ${item.product.Precio} x{" "}
-                                        {item.Cantidad} = $
-                                        {(
-                                            item.product.Precio * item.Cantidad
-                                        ).toLocaleString()}
-                                    </p>
+                            {detalle.map((item) => (
+                                <div
+                                    key={item.idCarrito}
+                                    className="flex gap-4 items-center mb-4 p-4 bg-gray-100 border-t border-gray-300"
+                                >
+                                    <img
+                                        src={`data:image/jpeg;base64,${item.product.Imagen}`}
+                                        alt={item.product.Nombre}
+                                        className="w-20 h-20 object-cover rounded"
+                                    />
+                                    <div>
+                                        <p className="font-semibold text-lg">
+                                            {item.product.Nombre}
+                                        </p>
+                                        <p className="text-base text-gray-600">
+                                            Precio: ${item.product.Precio}
+                                        </p>
+                                        <p className="text-base text-gray-600">
+                                            Cantidad: {item.Cantidad}
+                                        </p>
+                                        <p className="text-base text-gray-600">
+                                            Subtotal: ${item.product.Precio} x{" "}
+                                            {item.Cantidad} = $
+                                            {(
+                                                item.product.Precio *
+                                                item.Cantidad
+                                            ).toLocaleString()}
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
-                    </div>
+                            ))}
+                        </div>
 
-                    {/* Derecha: métodos de pago */}
-                    <div className="fixed top-1/2 right-[calc((100vw-1152px)/2)] w-[320px] bg-gray-100 p-6 -translate-y-1/2 flex flex-col justify-between">
-                        <RadioGroup value={metodoPago} onChange={setMetodoPago}>
-                            <RadioGroup.Label className="text-lg font-semibold mb-4">
-                                Selecciona un método de pago
-                            </RadioGroup.Label>
-                            <div className="space-y-3">
-                                {metodosPago.map((method) => (
-                                    <RadioGroup.Option
-                                        key={
-                                            method.idMetodosPago ??
-                                            method.Description
-                                        }
-                                        value={method.idMetodosPago}
-                                        className={({ active, checked }) =>
-                                            `block cursor-pointer rounded-lg px-4 py-2 border select-none
+                        {/* Derecha: métodos de pago */}
+                        <div className="fixed top-1/2 right-[calc((100vw-1152px)/2)] w-[320px] bg-gray-100 p-6 -translate-y-1/2 flex flex-col justify-between">
+                            <RadioGroup
+                                value={metodoPago}
+                                onChange={setMetodoPago}
+                            >
+                                <RadioGroup.Label className="text-lg font-semibold mb-4">
+                                    Selecciona un método de pago
+                                </RadioGroup.Label>
+                                <div className="space-y-3">
+                                    {metodosPago.map((method) => (
+                                        <RadioGroup.Option
+                                            key={
+                                                method.idMetodosPago ??
+                                                method.Description
+                                            }
+                                            value={method.idMetodosPago}
+                                            className={({ active, checked }) =>
+                                                `block cursor-pointer rounded-lg px-4 py-2 border select-none
                                             ${
                                                 checked
                                                     ? "bg-yellow-300 border-yellow-400 text-black font-semibold"
@@ -123,26 +136,27 @@ const CompraDetalle = () => {
                                                     ? "ring-2 ring-yellow-400 ring-offset-2"
                                                     : ""
                                             }`
-                                        }
-                                    >
-                                        {method.Description}
-                                    </RadioGroup.Option>
-                                ))}
+                                            }
+                                        >
+                                            {method.Description}
+                                        </RadioGroup.Option>
+                                    ))}
+                                </div>
+                            </RadioGroup>
+
+                            <div className="mt-6 text-xl font-semibold text-left">
+                                Total a Pagar: ${total.toLocaleString()}
                             </div>
-                        </RadioGroup>
 
-                        <div className="mt-6 text-xl font-semibold text-left">
-                            Total a Pagar: ${total.toLocaleString()}
+                            <button
+                                type="submit"
+                                className="bg-yellow-300 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded shadow w-full mt-4"
+                            >
+                                Continuar →
+                            </button>
                         </div>
-
-                        <button
-                            onClick={confirmarCompra}
-                            className="bg-yellow-300 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded shadow w-full mt-4"
-                        >
-                            ¡Continuar!
-                        </button>
                     </div>
-                </div>
+                </form>
             )}
         </div>
     );
