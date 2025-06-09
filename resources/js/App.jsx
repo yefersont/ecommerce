@@ -11,6 +11,7 @@ import Usuarios from "./pages/usuarios/Usuarios";
 import CompraDetalle from "./pages/compra/CompraDetalle";
 import CompraEnvio from "./pages/compra/CompraForm";
 import SeleccionarTarjeta from "./pages/compra/SeleccionarTarjeta";
+import ResumenPago from "./pages/compra/ResumenPago";
 import { CompraProvider } from "./components/context/CompraContext";
 const token = localStorage.getItem("token");
 
@@ -100,6 +101,17 @@ function App() {
                         <ProtectedRoute>
                             <MainLayout>
                                 <SeleccionarTarjeta />
+                            </MainLayout>
+                        </ProtectedRoute>
+                    }
+                />
+
+                <Route
+                    path="/resumen-pago"
+                    element={
+                        <ProtectedRoute>
+                            <MainLayout>
+                                <ResumenPago />
                             </MainLayout>
                         </ProtectedRoute>
                     }

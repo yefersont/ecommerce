@@ -9,7 +9,8 @@ const SeleccionarTarjeta = () => {
     const [tarjetas, setTarjetas] = useState([]);
     const [loading, setLoading] = useState(true);
     const [tarjetaSeleccionada, setTarjetaSeleccionada] = useState("");
-    const { setTarjetaSeleccionadaContext } = useCompra();
+    const { setTarjetaSeleccionadaContext, tarjetaSeleccionadaContext } =
+        useCompra(); // ⬅️ usamos también el valor actual del contexto
     const navigate = useNavigate();
     const idUsuario = localStorage.getItem("idUsuarios");
 
@@ -18,21 +19,24 @@ const SeleccionarTarjeta = () => {
             .get(`http://127.0.0.1:8000/api/tarjetas/${idUsuario}`)
             .then((res) => {
                 setTarjetas(res.data);
-                console.log(res.data);
+                // Recuperamos la tarjeta seleccionada del contexto, si existe
+                if (tarjetaSeleccionadaContext) {
+                    setTarjetaSeleccionada(tarjetaSeleccionadaContext);
+                }
                 setLoading(false);
             })
             .catch((err) => {
                 console.error("Error cargando tarjetas", err);
                 setLoading(false);
             });
-    }, [idUsuario]);
+    }, [idUsuario, tarjetaSeleccionadaContext]);
 
     const handleSubmit = () => {
         if (!tarjetaSeleccionada) {
             alert("Selecciona una tarjeta para continuar.");
             return;
         }
-        // setTarjetaSeleccionadaContext(tarjetaSeleccionada);
+        setTarjetaSeleccionadaContext(tarjetaSeleccionada);
         navigate("/resumen-pago");
     };
 
@@ -87,18 +91,45 @@ const SeleccionarTarjeta = () => {
                     </div>
 
                     {/* Derecha: botón continuar */}
-                    <div className="fixed top-1/2 right-[calc((100vw-1152px)/2)] w-[320px] bg-gray-100 p-6 -translate-y-1/2 flex flex-col justify-between">
-                        <div className="text-lg font-medium mb-4">
-                            Tarjeta seleccionada:
+                    <div className="fixed top-1/2 right-[calc((100vw-1152px)/2)] w-[320px] bg-gray-100 p-6 -translate-y-1/2 flex flex-col justify-between rounded-lg shadow">
+                        <div>
+                            <h3 className="text-lg font-semibold mb-2">
+                                Tarjeta seleccionada:
+                            </h3>
+                            {tarjetaSeleccionada ? (
+                                <p className="text-gray-800">
+                                    {
+                                        tarjetas.find(
+                                            (t) =>
+                                                t.idTarjetas ===
+                                                tarjetaSeleccionada
+                                        )?.Description
+                                    }
+                                </p>
+                            ) : (
+                                <p className="text-gray-500 italic">
+                                    Ninguna seleccionada
+                                </p>
+                            )}
                         </div>
 
-                        <button
-                            type="button"
-                            onClick={handleSubmit}
-                            className="bg-yellow-300 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded shadow w-full"
-                        >
-                            Continuar →
-                        </button>
+                        <div className="mt-6 space-y-3">
+                            <button
+                                type="button"
+                                onClick={handleSubmit}
+                                className="bg-yellow-300 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded shadow w-full"
+                            >
+                                Continuar
+                            </button>
+
+                            <button
+                                type="button"
+                                onClick={() => navigate("/compra-detalle")}
+                                className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded shadow w-full"
+                            >
+                                Cancelar
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}

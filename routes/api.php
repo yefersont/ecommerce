@@ -13,6 +13,8 @@ use App\Models\Usuario;
 use App\Http\Controllers\MetodoPagoController;
 use App\Http\Controllers\DepartamentoController;
 use App\Http\Controllers\TarjetaController;
+use App\Http\Controllers\DatosenvioController;
+use App\Http\Controllers\OrdenController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,11 +30,8 @@ use App\Http\Controllers\TarjetaController;
 
 Route::middleware(['auth:sanctum', 'check.token.expiry'])->group(function () {
 
-
     Route::get('/user', fn(Request $request) => $request->user());
     // Productos
-
-
     Route::get('/productos/filtrar', [ProductoController::class, 'filtrar']);
     Route::get('/productos/{id}', [ProductoController::class, 'show']);
     Route::delete('/productos/{producto}', [ProductoController::class, 'destroy']);
@@ -56,7 +55,11 @@ Route::middleware(['auth:sanctum', 'check.token.expiry'])->group(function () {
     // Ciudad por departamento
     Route::get('/departamentos/{id}/ciudades', [CiudadesController::class, 'porDepartamento']);
     // Tarjeta por usuario
+    Route::get('/tarjetas/{id}', [TarjetaController::class, 'TarjetaPorUsuario']);
+    // orden de compra
+    // Datos de envio
+    Route::post('/datosenvio', [DatosenvioController::class, 'store']);
 });
-Route::get('/tarjetas/{id}', [TarjetaController::class, 'TarjetaPorUsuario']);
+Route::post('/ordencompra', [OrdenController::class, 'store']);
 
 Route::post('/login', [AuthController::class, 'login']);

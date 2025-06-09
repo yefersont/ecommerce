@@ -2,15 +2,14 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Loader from "../../components/Loader";
 import { RadioGroup } from "@headlessui/react";
-import { Form } from "react-hook-form";
 import { useCompra } from "../../components/context/CompraContext";
 import { useNavigate } from "react-router-dom";
 
 const CompraDetalle = () => {
     const [detalle, setDetalle] = useState([]);
-    const [metodoPago, setMetodoPago] = useState("");
+    const { metodoPagoContext, setMetodoPagoContext } = useCompra();
+    const [metodoPago, setMetodoPago] = useState(metodoPagoContext || "");
     const [metodosPago, setMetodosPago] = useState([]);
-    const { setMetodoPagoContext } = useCompra();
     const idUsuario = localStorage.getItem("idUsuarios");
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
@@ -28,7 +27,6 @@ const CompraDetalle = () => {
                 setDetalle(res1.data);
                 console.log("Carrito (detalle):", res1.data);
 
-                // Corregimos posibles datos anidados
                 const pagosRaw = res2.data;
                 const pagos =
                     Array.isArray(pagosRaw) && Array.isArray(pagosRaw[0])
@@ -46,12 +44,19 @@ const CompraDetalle = () => {
             });
     }, [idUsuario]);
 
+    // ✅ Sincronizar si cambia el context (opcional, por robustez)
+    useEffect(() => {
+        if (metodoPagoContext) {
+            setMetodoPago(metodoPagoContext);
+        }
+    }, [metodoPagoContext]);
+
     const total = detalle.reduce((acc, item) => {
         return acc + item.product.Precio * item.Cantidad;
     }, 0);
 
     const onSubmit = (e) => {
-        e.preventDefault(); // ⛔️ evita la recarga
+        e.preventDefault();
         if (!metodoPago) {
             alert("Selecciona un método de pago");
             return;
@@ -126,16 +131,16 @@ const CompraDetalle = () => {
                                             value={method.idMetodosPago}
                                             className={({ active, checked }) =>
                                                 `block cursor-pointer rounded-lg px-4 py-2 border select-none
-                                            ${
-                                                checked
-                                                    ? "bg-yellow-300 border-yellow-400 text-black font-semibold"
-                                                    : "bg-white border-gray-300 text-gray-700"
-                                            }
-                                            ${
-                                                active
-                                                    ? "ring-2 ring-yellow-400 ring-offset-2"
-                                                    : ""
-                                            }`
+                                                ${
+                                                    checked
+                                                        ? "bg-yellow-300 border-yellow-400 text-black font-semibold"
+                                                        : "bg-white border-gray-300 text-gray-700"
+                                                }
+                                                ${
+                                                    active
+                                                        ? "ring-2 ring-yellow-400 ring-offset-2"
+                                                        : ""
+                                                }`
                                             }
                                         >
                                             {method.Description}

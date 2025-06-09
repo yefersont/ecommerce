@@ -23,6 +23,7 @@ const MainLayout = ({ children }) => {
         "/compra-detalle",
         "/formulario-envio",
         "/seleccionar-tarjeta",
+        "/resumen-pago",
     ];
 
     const estaEnRuta = rutas.includes(location.pathname);
