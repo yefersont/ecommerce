@@ -48,7 +48,7 @@ class OrdenController extends Controller
             return response()->json(
                 [
                     'mensaje' => 'Orden creada correctamente',
-                    'orden' => $orden
+                    'idOrden' => $orden->idOrden
                 ],
                 201
             );

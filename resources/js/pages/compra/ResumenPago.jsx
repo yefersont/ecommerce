@@ -49,34 +49,63 @@ const ResumenPago = () => {
         e.preventDefault();
 
         let idDatosEnvio = null;
+        let idOrden = null;
+
         try {
             const resEnvio = await axios.post(
                 "http://127.0.0.1:8000/api/datosenvio",
                 dataenvio
             );
             idDatosEnvio = resEnvio.data.idDatosEnvio;
-            console.log("Datos de envío insertados correctamente");
-        } catch (err) {
-            console.error("Error al insertar datos de envío", err);
-            alert("Hubo un problema al guardar los datos de envío.");
-            return;
-        }
+            console.log("✅ Datos de envío insertados:", idDatosEnvio);
 
-        const dataorden = {
-            Total: parseFloat(calcularTotal()),
-            MetodosPago_idMetodosPago: parseInt(metodoPagoContext),
-            Tarjetas_idTarjetas: tarjetaSeleccionadaContext
-                ? parseInt(tarjetaSeleccionadaContext)
-                : null,
-            Datosenvio_idDatosenvio: parseInt(idDatosEnvio),
-        };
+            const dataorden = {
+                Total: parseFloat(calcularTotal()),
+                MetodosPago_idMetodosPago: parseInt(metodoPagoContext),
+                Tarjetas_idTarjetas: tarjetaSeleccionadaContext
+                    ? parseInt(tarjetaSeleccionadaContext)
+                    : null,
+                Datosenvio_idDatosenvio: parseInt(idDatosEnvio),
+            };
 
-        try {
             const resOrden = await axios.post(
                 "http://127.0.0.1:8000/api/ordencompra",
                 dataorden
             );
-            console.log("Orden creada correctamente", resOrden.data);
+            idOrden = resOrden.data.idOrden;
+            console.log("✅ Orden creada:", idOrden);
+
+            const detalles = carrito.map((item) => ({
+                Orden_id: parseInt(idOrden),
+                Producto_id: parseInt(item.product.idProductos),
+                Cantidad: parseInt(item.Cantidad),
+                PrecioUnitario: parseFloat(item.product.Precio),
+            }));
+
+            try {
+                await axios.post(
+                    "http://127.0.0.1:8000/api/ordendetalle",
+                    detalles,
+                    {
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                    }
+                );
+                console.log("✅ Detalles guardados correctamente");
+            } catch (error) {
+                console.error(
+                    "❌ Error al guardar los detalles:",
+                    error.response?.data || error.message
+                );
+                Swal.fire(
+                    "Error",
+                    "No se pudieron guardar los detalles de la orden",
+                    "error"
+                );
+            }
+
+            console.log("✅ Detalles de orden registrados");
 
             Swal.fire({
                 title: "Compra Realizada!",
@@ -90,13 +119,13 @@ const ResumenPago = () => {
                     );
                     navigate("/productos");
                 } catch (error) {
-                    console.error("Error al vaciar el carrito", error);
+                    console.error("❌ Error al vaciar el carrito", error);
                     Swal.fire("Error", "No se pudo vaciar el carrito", "error");
                 }
             });
         } catch (error) {
-            console.error("Hubo error al crear la orden", error);
-            alert("No se pudo registrar la orden.");
+            console.error("❌ Error en el proceso de compra", error);
+            alert("Hubo un problema al procesar tu compra.");
         }
     };
 

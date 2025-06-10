@@ -15,6 +15,7 @@ use App\Http\Controllers\DepartamentoController;
 use App\Http\Controllers\TarjetaController;
 use App\Http\Controllers\DatosenvioController;
 use App\Http\Controllers\OrdenController;
+use App\Http\Controllers\OrdenDetalleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -57,9 +58,12 @@ Route::middleware(['auth:sanctum', 'check.token.expiry'])->group(function () {
     // Tarjeta por usuario
     Route::get('/tarjetas/{id}', [TarjetaController::class, 'TarjetaPorUsuario']);
     // orden de compra
+    Route::post('/ordencompra', [OrdenController::class, 'store']);
     // Datos de envio
     Route::post('/datosenvio', [DatosenvioController::class, 'store']);
+    // Orden de compra
 });
-Route::post('/ordencompra', [OrdenController::class, 'store']);
 
+
+Route::post('/ordendetalle', [OrdenDetalleController::class, 'store']);
 Route::post('/login', [AuthController::class, 'login']);
