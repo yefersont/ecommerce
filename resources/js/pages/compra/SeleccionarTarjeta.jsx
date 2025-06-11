@@ -45,90 +45,87 @@ const SeleccionarTarjeta = () => {
             {loading ? (
                 <Loader />
             ) : (
-                <div className="relative min-h-screen bg-gray-100 py-6 max-w-6xl mx-auto flex px-0">
-                    {/* Izquierda: tarjetas */}
-                    <div className="w-2/3 bg-gray-100 border-r border-gray-300 p-6">
-                        <h2 className="text-2xl font-bold mb-6">
-                            Selecciona una tarjeta
-                        </h2>
+                <div className="bg-gray-100 py-6">
+                    <div className="max-w-6xl mx-auto flex flex-col lg:flex-row gap-4 px-4 lg:px-0 mt-[32px]">
+                        {/* Panel izquierdo: tarjetas */}
+                        <div className="lg:w-2/3 w-full bg-transparent p-4 rounded shadow-none">
+                            <h2 className="text-2xl font-bold mb-6">
+                                Selecciona una tarjeta
+                            </h2>
 
-                        <RadioGroup
-                            value={tarjetaSeleccionada}
-                            onChange={setTarjetaSeleccionada}
-                        >
-                            <div className="space-y-4">
-                                {tarjetas.map((tarjeta) => (
-                                    <RadioGroup.Option
-                                        key={tarjeta.idTarjetas}
-                                        value={tarjeta.idTarjetas}
-                                        className={({ checked }) =>
-                                            `block cursor-pointer rounded-lg px-4 py-4 border
-                                                ${
+                            <RadioGroup
+                                value={tarjetaSeleccionada}
+                                onChange={setTarjetaSeleccionada}
+                            >
+                                <div className="space-y-4">
+                                    {tarjetas.map((tarjeta) => (
+                                        <RadioGroup.Option
+                                            key={tarjeta.idTarjetas}
+                                            value={tarjeta.idTarjetas}
+                                            className={({ checked }) =>
+                                                `block cursor-pointer rounded-lg px-4 py-4 border select-none w-full text-center ${
                                                     checked
                                                         ? "bg-yellow-300 border-yellow-400 text-black font-semibold"
                                                         : "bg-white border-gray-300 text-gray-700"
                                                 }`
-                                        }
-                                    >
-                                        <div>
-                                            <p className="text-lg font-semibold">
+                                            }
+                                        >
+                                            <div className="text-lg font-semibold">
                                                 {tarjeta.Description}
-                                            </p>
-                                        </div>
-                                    </RadioGroup.Option>
-                                ))}
-                            </div>
-                        </RadioGroup>
+                                            </div>
+                                        </RadioGroup.Option>
+                                    ))}
+                                </div>
+                            </RadioGroup>
 
-                        {/* Botón para agregar otra tarjeta */}
-                        <button
-                            type="button"
-                            onClick={() => navigate("/agregar-tarjeta")}
-                            className="mt-6 text-sm text-blue-600 hover:underline"
-                        >
-                            + Agregar otra tarjeta
-                        </button>
-                    </div>
-
-                    {/* Derecha: botón continuar */}
-                    <div className="fixed top-1/2 right-[calc((100vw-1152px)/2)] w-[320px] bg-gray-100 p-6 -translate-y-1/2 flex flex-col justify-between rounded-lg shadow">
-                        <div>
-                            <h3 className="text-lg font-semibold mb-2">
-                                Tarjeta seleccionada:
-                            </h3>
-                            {tarjetaSeleccionada ? (
-                                <p className="text-gray-800">
-                                    {
-                                        tarjetas.find(
-                                            (t) =>
-                                                t.idTarjetas ===
-                                                tarjetaSeleccionada
-                                        )?.Description
-                                    }
-                                </p>
-                            ) : (
-                                <p className="text-gray-500 italic">
-                                    Ninguna seleccionada
-                                </p>
-                            )}
+                            <button
+                                type="button"
+                                onClick={() => navigate("/agregar-tarjeta")}
+                                className="mt-6 text-sm text-blue-600 hover:underline"
+                            >
+                                + Agregar otra tarjeta
+                            </button>
                         </div>
 
-                        <div className="mt-6 space-y-3">
-                            <button
-                                type="button"
-                                onClick={handleSubmit}
-                                className="bg-yellow-300 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded shadow w-full"
-                            >
-                                Continuar
-                            </button>
+                        {/* Línea divisoria */}
+                        <div className="hidden lg:block w-px bg-gray-300 mx-2"></div>
 
-                            <button
-                                type="button"
-                                onClick={() => navigate("/compra-detalle")}
-                                className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded shadow w-full"
-                            >
-                                Cancelar
-                            </button>
+                        {/* Panel derecho: resumen y botones */}
+                        <div className="lg:w-1/3 w-full bg-transparent p-6 rounded shadow-none flex flex-col items-center justify-center gap-6">
+                            <div className="text-lg font-semibold text-center w-full">
+                                Tarjeta seleccionada:
+                            </div>
+
+                            <div className="text-gray-800 text-center w-full">
+                                {tarjetaSeleccionada ? (
+                                    tarjetas.find(
+                                        (t) =>
+                                            t.idTarjetas === tarjetaSeleccionada
+                                    )?.Description
+                                ) : (
+                                    <span className="italic text-gray-500">
+                                        Ninguna seleccionada
+                                    </span>
+                                )}
+                            </div>
+
+                            <div className="flex flex-col gap-2 w-full">
+                                <button
+                                    type="button"
+                                    onClick={handleSubmit}
+                                    className="bg-yellow-300 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded shadow w-full"
+                                >
+                                    Continuar
+                                </button>
+
+                                <button
+                                    type="button"
+                                    onClick={() => navigate("/compra-detalle")}
+                                    className="w-full py-2 bg-[#232f3e] text-yellow-400 rounded hover:bg-[#3b4f68]"
+                                >
+                                    Cancelar
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>

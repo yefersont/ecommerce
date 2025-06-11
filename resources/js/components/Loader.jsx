@@ -1,8 +1,8 @@
 // src/components/Loader.jsx
 const Loader = () => {
     return (
-        <div className="fixed inset-12 inset-32 flex justify-center items-center bg-gray bg-opacity-70 z-50">
-            <div className="w-24 h-24 border-8 border-yellow-400 border-t-yellow-600 border-solid rounded-full animate-spin"></div>
+        <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
+            <div className="w-20 h-20 border-[10px] border-yellow-400 border-l-transparent border-r-transparent rounded-full animate-spin-slow"></div>
         </div>
     );
 };

@@ -71,57 +71,61 @@ const CompraDetalle = () => {
             {loading ? (
                 <Loader />
             ) : (
-                <form onSubmit={onSubmit}>
-                    <div className="relative min-h-screen bg-gray-100 py-6 max-w-6xl mx-auto flex px-0">
-                        {/* Izquierda: productos */}
-                        <div className="w-2/3 bg-gray-100 overflow-y-auto border-r border-gray-300 p-4">
-                            <h2 className="text-2xl font-bold mb-6">
+                <div className="bg-gray-100 py-6">
+                    <div className="max-w-6xl mx-auto flex flex-col lg:flex-row gap-4 px-4 lg:px-0 mt-[32px]">
+                        {/* Productos */}
+                        <div className="lg:w-2/3 w-full bg-transparent p-4 rounded shadow-none">
+                            <h2 className="text-xl font-bold mb-4">
                                 Detalles de la Compra
                             </h2>
 
-                            {detalle.map((item) => (
-                                <div
-                                    key={item.idCarrito}
-                                    className="flex gap-4 items-center mb-4 p-4 bg-gray-100 border-t border-gray-300"
-                                >
-                                    <img
-                                        src={`data:image/jpeg;base64,${item.product.Imagen}`}
-                                        alt={item.product.Nombre}
-                                        className="w-20 h-20 object-cover rounded"
-                                    />
-                                    <div>
-                                        <p className="font-semibold text-lg">
-                                            {item.product.Nombre}
-                                        </p>
-                                        <p className="text-base text-gray-600">
-                                            Precio: ${item.product.Precio}
-                                        </p>
-                                        <p className="text-base text-gray-600">
-                                            Cantidad: {item.Cantidad}
-                                        </p>
-                                        <p className="text-base text-gray-600">
-                                            Subtotal: ${item.product.Precio} x{" "}
-                                            {item.Cantidad} = $
-                                            {(
-                                                item.product.Precio *
-                                                item.Cantidad
-                                            ).toLocaleString()}
-                                        </p>
-                                    </div>
-                                </div>
-                            ))}
+                            <div className="max-h-[65vh] overflow-y-auto pr-2">
+                                <ul className="divide-y divide-gray-200">
+                                    {detalle.map((item) => (
+                                        <li
+                                            key={item.idCarrito}
+                                            className="py-4 flex items-center gap-4"
+                                        >
+                                            <img
+                                                src={`data:image/jpeg;base64,${item.product.Imagen}`}
+                                                alt={item.product.Nombre}
+                                                className="w-16 h-16 object-cover rounded shadow"
+                                            />
+                                            <div className="flex-1">
+                                                <p className="font-medium text-gray-800">
+                                                    {item.product.Nombre}
+                                                </p>
+                                                <p className="text-sm text-gray-500">
+                                                    {item.Cantidad} x $
+                                                    {item.product.Precio.toLocaleString()}
+                                                </p>
+                                            </div>
+                                            <div className="text-right font-bold text-gray-700">
+                                                $
+                                                {(
+                                                    item.product.Precio *
+                                                    item.Cantidad
+                                                ).toLocaleString()}
+                                            </div>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
                         </div>
+                        {/* Línea divisoria */}
+                        <div className="hidden lg:block w-px bg-gray-300 mx-2"></div>
 
-                        {/* Derecha: métodos de pago */}
-                        <div className="fixed top-1/2 right-[calc((100vw-1152px)/2)] w-[320px] bg-gray-100 p-6 -translate-y-1/2 flex flex-col justify-between">
+                        {/* Panel derecho */}
+                        <div className="lg:w-1/3 w-full bg-transparent p-6 rounded shadow-none flex flex-col items-center justify-center gap-6">
                             <RadioGroup
                                 value={metodoPago}
                                 onChange={setMetodoPago}
+                                className="w-full"
                             >
-                                <RadioGroup.Label className="text-lg font-semibold mb-4">
+                                <RadioGroup.Label className="text-lg font-semibold mb-4 text-center w-full">
                                     Selecciona un método de pago
                                 </RadioGroup.Label>
-                                <div className="space-y-3">
+                                <div className="space-y-3 w-full">
                                     {metodosPago.map((method) => (
                                         <RadioGroup.Option
                                             key={
@@ -130,13 +134,11 @@ const CompraDetalle = () => {
                                             }
                                             value={method.idMetodosPago}
                                             className={({ active, checked }) =>
-                                                `block cursor-pointer rounded-lg px-4 py-2 border select-none
-                                                ${
+                                                `block cursor-pointer rounded-lg px-4 py-2 border select-none text-center w-full ${
                                                     checked
                                                         ? "bg-yellow-300 border-yellow-400 text-black font-semibold"
                                                         : "bg-white border-gray-300 text-gray-700"
-                                                }
-                                                ${
+                                                } ${
                                                     active
                                                         ? "ring-2 ring-yellow-400 ring-offset-2"
                                                         : ""
@@ -149,19 +151,27 @@ const CompraDetalle = () => {
                                 </div>
                             </RadioGroup>
 
-                            <div className="mt-6 text-xl font-semibold text-left">
+                            <div className="text-xl font-semibold text-center w-full">
                                 Total a Pagar: ${total.toLocaleString()}
                             </div>
 
-                            <button
-                                type="submit"
-                                className="bg-yellow-300 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded shadow w-full mt-4"
-                            >
-                                Continuar →
-                            </button>
+                            <div className="flex flex-col gap-2 w-full">
+                                <button
+                                    onClick={onSubmit}
+                                    className="bg-yellow-300 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded shadow w-full"
+                                >
+                                    Continuar →
+                                </button>
+                                <button
+                                    className="w-full py-2 bg-[#232f3e] text-yellow-400 rounded hover:bg-[#3b4f68]"
+                                    onClick={() => navigate("/productos")}
+                                >
+                                    Cancelar
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </form>
+                </div>
             )}
         </div>
     );

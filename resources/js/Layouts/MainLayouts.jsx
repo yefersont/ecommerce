@@ -50,13 +50,20 @@ const MainLayout = ({ children }) => {
                         </button>
                     </div>
 
-                    <Link to="/productos" className="text-sm hover:underline">
-                        Productos
-                    </Link>
+                    {!estaEnRuta && (
+                        <div>
+                            <Link
+                                to="/productos"
+                                className="text-sm hover:underline mr-4"
+                            >
+                                Productos
+                            </Link>
 
-                    <Link to="#" className="text-sm hover:underline">
-                        Mis compras
-                    </Link>
+                            <Link to="#" className="text-sm hover:underline">
+                                Mis compras
+                            </Link>
+                        </div>
+                    )}
 
                     {role === "1" && (
                         <Link
@@ -67,7 +74,6 @@ const MainLayout = ({ children }) => {
                         </Link>
                     )}
 
-                    {/* Mostrar botón del carrito solo si NO estamos en /compra-detalle */}
                     {!estaEnRuta && (
                         <button
                             onClick={() => setModalAbierto(true)}

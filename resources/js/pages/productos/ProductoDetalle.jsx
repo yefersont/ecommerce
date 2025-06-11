@@ -7,6 +7,7 @@ import Swal from "sweetalert2";
 import Modal from "../../components/Modal";
 import ProductoFormEditar from "../productos/ProductoFormEditar";
 import Loader from "../../components/Loader";
+import { motion } from "framer-motion";
 
 const ProductoDetalle = () => {
     const { id } = useParams();
@@ -103,171 +104,195 @@ const ProductoDetalle = () => {
             {loading ? (
                 <Loader />
             ) : (
-                <div className="p-6 bg-gray-100 min-h">
-                    <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-8">
-                        {/* Imagen con zoom */}
-                        <div className="bg-white p-4 rounded-lg shadow w-full md:w-[450px]">
-                            <div
-                                className="cursor-pointer group w-[400px] h-[400px] overflow-hidden border rounded-lg"
-                                onMouseEnter={() => setIsZoomed(true)}
-                                onMouseLeave={() => setIsZoomed(false)}
-                                onClick={() => setModalImagenAbierto(true)} // Abre el modal de imagen
-                                onMouseMove={handleMouseMove}
-                                style={{
-                                    backgroundImage: `url(${imagenSrc})`,
-                                    backgroundSize: isZoomed ? "200%" : "100%", // Zoom solo cuando está activado
-                                    backgroundPosition: `${
-                                        (zoomPos.x / 400) * 100
-                                    }% ${(zoomPos.y / 400) * 100}%`, // Zoom basado en la posición del mouse
-                                    backgroundRepeat: "no-repeat",
-                                }}
-                            ></div>
-                        </div>
+                <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.9, ease: "easeOut" }}
+                    className="p-4"
+                >
+                    <div className="p-6 mt-10">
+                        <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-8">
+                            {/* Imagen con zoom */}
+                            <div className="md:col-span-1 bg-white shadow p-4">
+                                <div
+                                    className="relative w-full aspect-square cursor-pointer overflow-hidden border"
+                                    onMouseEnter={() => setIsZoomed(true)}
+                                    onMouseLeave={() => setIsZoomed(false)}
+                                    onClick={() => setModalImagenAbierto(true)}
+                                    onMouseMove={handleMouseMove}
+                                    style={{
+                                        backgroundImage: `url(${imagenSrc})`,
+                                        backgroundSize: isZoomed
+                                            ? "200%"
+                                            : "100%",
+                                        backgroundPosition: `${
+                                            (zoomPos.x / 400) * 100
+                                        }% ${(zoomPos.y / 400) * 100}%`,
+                                        backgroundRepeat: "no-repeat",
+                                    }}
+                                ></div>
+                            </div>
 
-                        {/* Detalles del producto */}
-                        <div className="flex-1 bg-white p-6 rounded-lg shadow">
-                            <div>
-                                <h1 className="text-3xl font-bold mb-2">
+                            {/* Detalles del producto */}
+                            <div className="md:col-span-2 bg-white shadow p-8 space-y-6">
+                                <h1 className="text-3xl font-semibold text-gray-900">
                                     {producto.Nombre}
                                 </h1>
-                                <p className="text-gray-700 mb-4">
+                                <p className="text-gray-700 text-lg">
                                     {producto.Descripcion}
                                 </p>
-                                <p className="text-gray-700 mb-4">
+                                <p className="text-gray-600">
                                     Disponibles: {producto.Stock} Unds
                                 </p>
-                                <div className="text-2xl font-bold text-gray-900 mb-4">
+
+                                {/* Precio normal */}
+                                <div className="text-xl text-gray-900">
                                     $
                                     {parseFloat(producto.Precio).toLocaleString(
                                         "es-CO"
                                     )}
                                 </div>
-                            </div>
 
-                            <div className="flex items-center gap-4">
                                 {/* Selector de cantidad */}
-                                <div className="flex items-center bg-withe-100 rounded-full overflow-hidden shadow-lg">
-                                    <button
-                                        onClick={() =>
-                                            setCantidad((prev) =>
-                                                Math.max(1, prev - 1)
-                                            )
-                                        }
-                                        className="px-4 py-2 text-gray-700 hover:bg-gray-200 transition"
-                                    >
-                                        −
-                                    </button>
-                                    <input
-                                        type="number"
-                                        min="1"
-                                        max={producto.Stock}
-                                        value={cantidad}
-                                        onChange={(e) => {
-                                            const valor = Number(
-                                                e.target.value
-                                            );
-                                            if (valor > producto.Stock) {
-                                                Swal.fire(
-                                                    "¡Stock insuficiente!",
-                                                    "No puedes seleccionar más de lo disponible.",
-                                                    "warning"
-                                                );
-                                                setCantidad(producto.Stock);
-                                            } else {
-                                                setCantidad(Math.max(1, valor));
+                                <div className="flex items-center">
+                                    <div className="flex items-center border rounded-full overflow-hidden shadow-sm">
+                                        <button
+                                            onClick={() =>
+                                                setCantidad((prev) =>
+                                                    Math.max(1, prev - 1)
+                                                )
                                             }
-                                        }}
-                                        className="w-12 text-center bg-transparent outline-none text-gray-900 font-medium"
-                                    />
+                                            className="px-4 py-2 text-gray-700 hover:bg-gray-200 transition"
+                                        >
+                                            −
+                                        </button>
+                                        <input
+                                            type="number"
+                                            min="1"
+                                            max={producto.Stock}
+                                            value={cantidad}
+                                            onChange={(e) => {
+                                                const valor = Number(
+                                                    e.target.value
+                                                );
+                                                if (valor > producto.Stock) {
+                                                    Swal.fire(
+                                                        "¡Stock insuficiente!",
+                                                        "No puedes seleccionar más de lo disponible.",
+                                                        "warning"
+                                                    );
+                                                    setCantidad(producto.Stock);
+                                                } else {
+                                                    setCantidad(
+                                                        Math.max(1, valor)
+                                                    );
+                                                }
+                                            }}
+                                            className="w-14 text-center bg-transparent outline-none text-gray-900 font-medium"
+                                        />
+                                        <button
+                                            onClick={() =>
+                                                setCantidad((prev) =>
+                                                    prev < producto.Stock
+                                                        ? prev + 1
+                                                        : prev
+                                                )
+                                            }
+                                            className="px-4 py-2 text-gray-700 hover:bg-gray-200 transition"
+                                        >
+                                            +
+                                        </button>
+                                    </div>
+                                </div>
+
+                                {/* Botones */}
+                                <div className="flex flex-wrap gap-3 pt-2">
                                     <button
-                                        onClick={() =>
-                                            setCantidad((prev) =>
-                                                prev < producto.Stock
-                                                    ? prev + 1
-                                                    : prev
-                                            )
-                                        }
-                                        className="px-4 py-2 text-gray-700 hover:bg-gray-200 transition"
+                                        className="w-full py-2 bg-yellow-400 hover:bg-yellow-500 text-black flex items-center justify-center gap-2"
+                                        onClick={addToCart}
                                     >
-                                        +
+                                        <ShoppingCart size={20} />
+                                        Agregar al Carrito
                                     </button>
+                                    <button
+                                        className="w-full py-2 bg-[#3b4f68] text-yellow-400   hover:bg-[#232f3e]"
+                                        onClick={() => navigate("/productos")}
+                                    >
+                                        Volver
+                                    </button>
+
+                                    {role === "1" && (
+                                        <>
+                                            <button
+                                                className="bg-yellow-400 hover:bg-yellow-500 text-black py-2 px-4 rounded transition flex items-center"
+                                                onClick={() =>
+                                                    setModalEditarAbierto(true)
+                                                }
+                                            >
+                                                <Pen
+                                                    size={20}
+                                                    className="mr-2"
+                                                />
+                                                Editar
+                                            </button>
+                                            <button
+                                                className="bg-yellow-400 hover:bg-yellow-500 text-black py-2 px-4 rounded transition flex items-center"
+                                                onClick={EliminarProducto}
+                                            >
+                                                <Trash2
+                                                    size={20}
+                                                    className="mr-2"
+                                                />
+                                                Eliminar
+                                            </button>
+                                        </>
+                                    )}
                                 </div>
                             </div>
-
-                            {/* Boto Agregar al carrito */}
-                            <div className="flex gap-2 justify-start mt-6">
-                                <button
-                                    className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-300 flex items-center"
-                                    onClick={addToCart}
-                                >
-                                    <ShoppingCart size={20} className="mr-2" />
-                                    Agregar al Carrito
-                                </button>
-
-                                {role === "1" && (
-                                    <button
-                                        className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-300 flex items-center"
-                                        onClick={() =>
-                                            setModalEditarAbierto(true)
-                                        } // Abre el modal de edición
-                                    >
-                                        <Pen size={20} className="mr-2" />
-                                        Editar
-                                    </button>
-                                )}
-                                {role === "1" && (
-                                    <button
-                                        className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-300 flex items-center"
-                                        onClick={EliminarProducto}
-                                    >
-                                        <Trash2 size={20} className="mr-2" />
-                                        Eliminar
-                                    </button>
-                                )}
-                            </div>
                         </div>
-                    </div>
 
-                    {/* Modal de imagen ampliada */}
-                    {modalImagenAbierto && (
-                        <div
-                            className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50"
-                            onClick={() => setModalImagenAbierto(false)} // Cierra el modal al hacer clic fuera
-                        >
+                        {/* Modal de imagen ampliada */}
+                        {modalImagenAbierto && (
                             <div
-                                className="relative max-w-4xl w-full p-4"
-                                onClick={(e) => e.stopPropagation()} // Evita que se cierre al hacer click en la imagen
+                                className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50"
+                                onClick={() => setModalImagenAbierto(false)}
                             >
-                                <button
-                                    className="absolute top-2 right-2 text-white bg-black bg-opacity-50 rounded-full p-1"
-                                    onClick={() => setModalImagenAbierto(false)}
+                                <div
+                                    className="relative max-w-4xl w-full p-4"
+                                    onClick={(e) => e.stopPropagation()}
                                 >
-                                    <X size={24} />
-                                </button>
-                                <img
-                                    src={imagenSrc}
-                                    alt="Imagen ampliada"
-                                    className="w-full max-h-[80vh] object-contain rounded-lg"
-                                />
+                                    <button
+                                        className="absolute top-2 right-2 text-white bg-black bg-opacity-50 rounded-full p-1"
+                                        onClick={() =>
+                                            setModalImagenAbierto(false)
+                                        }
+                                    >
+                                        <X size={24} />
+                                    </button>
+                                    <img
+                                        src={imagenSrc}
+                                        alt="Imagen ampliada"
+                                        className="w-full max-h-[80vh] object-contain rounded-lg"
+                                    />
+                                </div>
                             </div>
-                        </div>
-                    )}
+                        )}
 
-                    {/* Modal de Edición */}
-                    {modalEditarAbierto && (
-                        <Modal
-                            isOpen={modalEditarAbierto}
-                            onClose={() => setModalEditarAbierto(false)}
-                            title="Editar Producto"
-                        >
-                            {/* Aquí puedes poner el formulario de edición del producto */}
-                            <ProductoFormEditar
-                                producto={producto}
+                        {/* Modal de Edición */}
+                        {modalEditarAbierto && (
+                            <Modal
+                                isOpen={modalEditarAbierto}
                                 onClose={() => setModalEditarAbierto(false)}
-                            />
-                        </Modal>
-                    )}
-                </div>
+                                title="Editar Producto"
+                            >
+                                <ProductoFormEditar
+                                    producto={producto}
+                                    onClose={() => setModalEditarAbierto(false)}
+                                />
+                            </Modal>
+                        )}
+                    </div>
+                </motion.div>
             )}
         </div>
     );

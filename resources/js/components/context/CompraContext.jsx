@@ -8,6 +8,11 @@ export const CompraProvider = ({ children }) => {
     const [tarjetaSeleccionadaContext, setTarjetaSeleccionadaContext] =
         useState(null);
 
+    // 🎯 NUEVOS estados para los filtros de productos
+    const [busqueda, setBusqueda] = useState("");
+    const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("");
+    const [precioSeleccionado, setPrecioSeleccionado] = useState("");
+
     return (
         <CompraContext.Provider
             value={{
@@ -17,6 +22,14 @@ export const CompraProvider = ({ children }) => {
                 setDatosEnvio,
                 tarjetaSeleccionadaContext,
                 setTarjetaSeleccionadaContext,
+
+                // Exportar también los filtros
+                busqueda,
+                setBusqueda,
+                categoriaSeleccionada,
+                setCategoriaSeleccionada,
+                precioSeleccionado,
+                setPrecioSeleccionado,
             }}
         >
             {children}

@@ -146,7 +146,7 @@ const Carrito = ({ onClose }) => {
 
                 {/* Resumen y botones */}
                 {carrito.length > 0 && (
-                    <div className="p-5 border-t bg-gray-50">
+                    <div className="p-5 border-t bg-white">
                         <div className="flex justify-between mb-3 text-base font-medium">
                             <span>Total:</span>
                             <span>${totalGeneral.toLocaleString("es-CO")}</span>
@@ -154,13 +154,13 @@ const Carrito = ({ onClose }) => {
                         <div className="flex gap-3">
                             <button
                                 onClick={vaciarCarrito}
-                                className="w-1/2 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
+                                className="w-1/2 py-2  bg-[#3b4f68] text-yellow-400   hover:bg-[#232f3e]"
                             >
                                 Vaciar
                             </button>
                             <button
                                 onClick={comprar}
-                                className="w-1/2 py-2 bg-yellow-400 text-black rounded hover:bg-yellow-500"
+                                className="w-1/2 py-2 bg-yellow-400 text-black  hover:bg-yellow-500"
                             >
                                 ¡Proceder con la compra!
                             </button>

@@ -141,7 +141,7 @@ const ResumenPago = () => {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         {/* Columna izquierda */}
-                        <div className="bg-white rounded-2xl shadow-lg border p-6 space-y-6">
+                        <div className="bg-transparent rounded-2xl   p-6 space-y-6">
                             <div>
                                 <h3 className="text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
                                     <MapPin className="w-5 h-5 text-gray-600" />
@@ -280,7 +280,7 @@ const ResumenPago = () => {
                         </div>
 
                         {/* Columna derecha */}
-                        <div className="bg-white rounded-2xl shadow-lg border p-6 flex flex-col max-h-[550px]">
+                        <div className="bg-transparent rounded-2xl  p-6 flex flex-col max-h-[550px]">
                             <h3 className="text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
                                 <ShoppingBasket className="w-5 h-5 text-gray-600" />
                                 Productos en el Carrito
@@ -330,7 +330,7 @@ const ResumenPago = () => {
 
                                         <div className="flex justify-between gap-4">
                                             <button
-                                                className=" flex-1 bg-gray-300 hover:bg-gray-100 text-black font-bold py-2 px-2 rounded shadow w-full"
+                                                className=" flex-1 bg-[#232f3e] hover:bg-[#3b4f68] text-yellow-400 font-bold py-2 px-2 rounded shadow w-full"
                                                 onClick={() => {
                                                     alert("Proceso cancelado");
                                                     navigate("/productos");
