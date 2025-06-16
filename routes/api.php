@@ -29,6 +29,12 @@ use App\Http\Controllers\OrdenDetalleController;
 */
 // Login 
 
+
+Route::post('/register', [UsuarioController::class, 'store']);
+
+Route::post('/login', [AuthController::class, 'login']);
+
+
 Route::middleware(['auth:sanctum', 'check.token.expiry'])->group(function () {
 
     Route::get('/user', fn(Request $request) => $request->user());
@@ -62,8 +68,6 @@ Route::middleware(['auth:sanctum', 'check.token.expiry'])->group(function () {
     // Datos de envio
     Route::post('/datosenvio', [DatosenvioController::class, 'store']);
     // Orden de compra
+    Route::post('/ordendetalle', [OrdenDetalleController::class, 'store']);
+    Route::get('/ordenes/usuario/{idUsuario}', [OrdenController::class, 'OrdenPorUsuario']);
 });
-
-
-Route::post('/ordendetalle', [OrdenDetalleController::class, 'store']);
-Route::post('/login', [AuthController::class, 'login']);

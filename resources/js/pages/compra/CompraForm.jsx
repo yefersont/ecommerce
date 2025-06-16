@@ -384,7 +384,7 @@ const CompraEnvio = () => {
 
                     <div className="mt-6 flex justify-end">
                         <button
-                            className="px-20 py-2 bg-[#232f3e] text-yellow-400 rounded hover:bg-[#3b4f68]"
+                            className="px-20 py-2 bg-[#232f3e] mr-9 text-yellow-400 rounded hover:bg-[#3b4f68]"
                             onClick={() => {
                                 navigate("/productos");
                             }}
@@ -393,7 +393,7 @@ const CompraEnvio = () => {
                         </button>
                         <button
                             type="submit"
-                            className="px-20 py-2 bg-yellow-400 text-black rounded hover:bg-yellow-500"
+                            className="px-20 py-2 bg-yellow-400 ml-8 text-black rounded hover:bg-yellow-500"
                         >
                             Continuar
                         </button>

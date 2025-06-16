@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Datosenvio;
 use App\Models\Orden;
 use App\Models\Status;
 use Exception;
@@ -15,6 +16,45 @@ class OrdenController extends Controller
     public function index()
     {
         //
+    }
+
+    public function OrdenPorUsuario($idUsuario)
+    {
+
+
+        try {
+
+            $datosenvio = Datosenvio::where('Usuarios_idUsuarios', $idUsuario)->pluck('idDatosEnvio');
+
+            $ordenes = Orden::with([
+                'ordendetalles.product'
+            ])
+                ->whereIn('Datosenvio_idDatosenvio', $datosenvio)
+                ->orderBy('Fecha', 'desc')->get();
+
+            $ordenes->each(function ($orden) {
+                $orden->ordendetalles->each(function ($detalle) {
+                    $detalle->subtotal = $detalle->Cantidad * $detalle->PrecioUnitario;
+                });
+            });
+
+            foreach ($ordenes as $orden) {
+                foreach ($orden->ordendetalles as $detalle) {
+                    $detalle->subtotal = $detalle->Cantidad * $detalle->PrecioUnitario;
+
+                    if (isset($detalle->product->Imagen) && $detalle->product->Imagen) {
+                        $mimeType = finfo_buffer(finfo_open(), $detalle->product->Imagen, FILEINFO_MIME_TYPE);
+                        $detalle->product->Imagen = 'data:' . $mimeType . ';base64,' . base64_encode($detalle->product->Imagen);
+                    }
+                }
+            }
+
+            return response()->json($ordenes, 200, [], JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_IGNORE);
+        } catch (Exception $e) {
+            return response()->json([
+                "Error" => $e->getMessage()
+            ]);
+        }
     }
 
     /**

@@ -81,7 +81,10 @@ const ProductosPage = () => {
                 >
                     <div className="p-4">
                         <div className="flex justify-between items-center mb-6">
-                            <h1 className="text-3xl font-bold">Productos</h1>
+                            <h1 className="text-4xl font-semibold text-gray-800 mb-2 border-b pb-2">
+                                Productos Disponibles
+                            </h1>
+
                             <div className="flex items-center gap-4">
                                 {role === "1" && (
                                     <button

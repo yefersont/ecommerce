@@ -12,6 +12,8 @@ import CompraDetalle from "./pages/compra/CompraDetalle";
 import CompraEnvio from "./pages/compra/CompraForm";
 import SeleccionarTarjeta from "./pages/compra/SeleccionarTarjeta";
 import ResumenPago from "./pages/compra/ResumenPago";
+import Compras from "./pages/compra/Compras";
+import Register from "./pages/login/Register";
 import { CompraProvider } from "./components/context/CompraContext";
 const token = localStorage.getItem("token");
 
@@ -38,6 +40,7 @@ function App() {
             <Routes>
                 {/* Ruta de login */}
                 <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
 
                 {/* Rutas protegidas */}
                 <Route
@@ -112,6 +115,16 @@ function App() {
                         <ProtectedRoute>
                             <MainLayout>
                                 <ResumenPago />
+                            </MainLayout>
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/compras"
+                    element={
+                        <ProtectedRoute>
+                            <MainLayout>
+                                <Compras />
                             </MainLayout>
                         </ProtectedRoute>
                     }

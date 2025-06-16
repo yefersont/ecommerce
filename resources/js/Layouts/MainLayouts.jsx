@@ -59,7 +59,10 @@ const MainLayout = ({ children }) => {
                                 Productos
                             </Link>
 
-                            <Link to="#" className="text-sm hover:underline">
+                            <Link
+                                to="/compras"
+                                className="text-sm hover:underline"
+                            >
                                 Mis compras
                             </Link>
                         </div>

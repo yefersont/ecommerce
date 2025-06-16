@@ -111,6 +111,17 @@ const Login = () => {
                             >
                                 Ingresar
                             </button>
+                            <div className="text-xs text-gray-500 text-center pt-2">
+                                <p className="hover:underline cursor-pointer">
+                                    ¿Olvidaste tu contraseña?
+                                </p>
+                                <p
+                                    onClick={() => navigate("/register")}
+                                    className="hover:underline cursor-pointer mt-1 text-blue-500"
+                                >
+                                    ¿No tienes cuenta? Regístrate
+                                </p>
+                            </div>
                         </form>
 
                         <div className="text-xs text-gray-500 text-center pt-2 hover:underline cursor-pointer">

@@ -14,7 +14,7 @@ const ResumenPago = () => {
         useCompra();
     const navigate = useNavigate();
 
-    const dataenvio = {
+    const dataenvio = datosEnvio && {
         Usuarios_idUsuarios: parseInt(idUsuario),
         Identificacion: parseInt(datosEnvio.identificacion),
         Telefono: datosEnvio.telefono,
@@ -38,6 +38,16 @@ const ResumenPago = () => {
             .finally(() => setLoading(false));
     }, [idUsuario]);
 
+    useEffect(() => {
+        if (
+            !datosEnvio ||
+            !metodoPagoContext ||
+            (metodoPagoContext === "2" && !tarjetaSeleccionadaContext)
+        ) {
+            navigate("/formulario-envio");
+        }
+    }, [datosEnvio, metodoPagoContext, tarjetaSeleccionadaContext, navigate]);
+
     const calcularTotal = () => {
         return carrito.reduce(
             (total, item) => total + item.product.Precio * item.Cantidad,
@@ -47,6 +57,9 @@ const ResumenPago = () => {
 
     const onSubmit = async (e) => {
         e.preventDefault();
+        if (!dataenvio) {
+            return navigate("/formulario-envio");
+        }
 
         let idDatosEnvio = null;
         let idOrden = null;
