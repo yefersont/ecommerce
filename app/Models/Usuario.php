@@ -54,4 +54,9 @@ class Usuario extends Model
 	{
 		return $this->hasMany(Orden::class, 'Usuarios_idUsuarios');
 	}
+
+	public function tarjetas()
+	{
+		return $this->hasMany(Tarjeta::class, 'Usuarios_idUsuarios');
+	}
 }

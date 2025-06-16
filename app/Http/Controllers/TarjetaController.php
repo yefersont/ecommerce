@@ -28,7 +28,30 @@ class TarjetaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $request->validate([
+                'Description' => 'required|string',
+                'Usuarios_idUsuarios' => 'required|integer',
+                'Saldo' => 'required|integer'
+            ]);
+
+            $tarjeta = new Tarjeta();
+            $tarjeta->Description = $request->Description;
+            $tarjeta->Usuarios_idUsuarios = $request->Usuarios_idUsuarios;
+            $tarjeta->Saldo = $request->Saldo;
+
+            $tarjeta->save();
+
+            return response()->json([
+                'message' => 'Tarjeta creada exitosamente.',
+                'tarjeta' => $tarjeta
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error al crear la tarjeta.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**

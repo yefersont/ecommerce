@@ -4,22 +4,29 @@ import Loader from "../../components/Loader";
 import { RadioGroup } from "@headlessui/react";
 import { useCompra } from "../../components/context/CompraContext";
 import { useNavigate } from "react-router-dom";
+import Modal from "../../components/Modal";
+import TarjetaForm from "./TarjetaForm";
 
 const SeleccionarTarjeta = () => {
     const [tarjetas, setTarjetas] = useState([]);
     const [loading, setLoading] = useState(true);
     const [tarjetaSeleccionada, setTarjetaSeleccionada] = useState("");
+    const [modalAbierto, setModalAbierto] = useState(false); // ✅ Estado del modal
     const { setTarjetaSeleccionadaContext, tarjetaSeleccionadaContext } =
-        useCompra(); // ⬅️ usamos también el valor actual del contexto
+        useCompra();
     const navigate = useNavigate();
     const idUsuario = localStorage.getItem("idUsuarios");
 
     useEffect(() => {
+        cargarTarjetas();
+    }, [idUsuario, tarjetaSeleccionadaContext]);
+
+    const cargarTarjetas = () => {
+        setLoading(true);
         axios
             .get(`http://127.0.0.1:8000/api/tarjetas/${idUsuario}`)
             .then((res) => {
                 setTarjetas(res.data);
-                // Recuperamos la tarjeta seleccionada del contexto, si existe
                 if (tarjetaSeleccionadaContext) {
                     setTarjetaSeleccionada(tarjetaSeleccionadaContext);
                 }
@@ -29,7 +36,7 @@ const SeleccionarTarjeta = () => {
                 console.error("Error cargando tarjetas", err);
                 setLoading(false);
             });
-    }, [idUsuario, tarjetaSeleccionadaContext]);
+    };
 
     const handleSubmit = () => {
         if (!tarjetaSeleccionada) {
@@ -39,6 +46,7 @@ const SeleccionarTarjeta = () => {
         setTarjetaSeleccionadaContext(tarjetaSeleccionada);
         navigate("/resumen-pago");
     };
+    console.log("modalAbierto:", modalAbierto);
 
     return (
         <div>
@@ -47,7 +55,7 @@ const SeleccionarTarjeta = () => {
             ) : (
                 <div className="bg-gray-100 py-6">
                     <div className="max-w-6xl mx-auto flex flex-col lg:flex-row gap-4 px-4 lg:px-0 mt-[32px]">
-                        {/* Panel izquierdo: tarjetas */}
+                        {/* Panel izquierdo */}
                         <div className="lg:w-2/3 w-full bg-transparent p-4 rounded shadow-none">
                             <h2 className="text-2xl font-bold mb-6">
                                 Selecciona una tarjeta
@@ -79,8 +87,7 @@ const SeleccionarTarjeta = () => {
                             </RadioGroup>
 
                             <button
-                                type="button"
-                                onClick={() => navigate("/agregar-tarjeta")}
+                                onClick={() => setModalAbierto(true)}
                                 className="mt-6 text-sm text-blue-600 hover:underline"
                             >
                                 + Agregar otra tarjeta
@@ -90,7 +97,7 @@ const SeleccionarTarjeta = () => {
                         {/* Línea divisoria */}
                         <div className="hidden lg:block w-px bg-gray-300 mx-2"></div>
 
-                        {/* Panel derecho: resumen y botones */}
+                        {/* Panel derecho */}
                         <div className="lg:w-1/3 w-full bg-transparent p-6 rounded shadow-none flex flex-col items-center justify-center gap-6">
                             <div className="text-lg font-semibold text-center w-full">
                                 Tarjeta seleccionada:
@@ -130,6 +137,16 @@ const SeleccionarTarjeta = () => {
                     </div>
                 </div>
             )}
+            <Modal
+                isOpen={modalAbierto}
+                onClose={() => setModalAbierto(false)}
+                title="Agregar tarjeta"
+            >
+                <TarjetaForm
+                    onClose={() => setModalAbierto(false)}
+                    onTarjetaCreada={cargarTarjetas}
+                />{" "}
+            </Modal>
         </div>
     );
 };

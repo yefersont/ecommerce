@@ -71,3 +71,5 @@ Route::middleware(['auth:sanctum', 'check.token.expiry'])->group(function () {
     Route::post('/ordendetalle', [OrdenDetalleController::class, 'store']);
     Route::get('/ordenes/usuario/{idUsuario}', [OrdenController::class, 'OrdenPorUsuario']);
 });
+
+Route::post('/tarjetas', [TarjetaController::class, 'store']);

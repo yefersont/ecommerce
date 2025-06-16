@@ -32,9 +32,14 @@ class Tarjeta extends Model
 
 	protected $fillable = [
 		'Description',
-		'Saldo'
+		'Saldo',
+		'Usuarios_idUsuarios'
 	];
 
+	public function usuario()
+	{
+		return $this->belongsTo(Usuario::class, 'Usuarios_idUsuarios');
+	}
 	public function ordens()
 	{
 		return $this->hasMany(Orden::class, 'Tarjetas_idTarjetas');
