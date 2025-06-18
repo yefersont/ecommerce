@@ -11,6 +11,7 @@ const Compras = () => {
             .get(`http://127.0.0.1:8000/api/ordenes/usuario/${idUsuario}`)
             .then((res) => {
                 setOrdenes(res.data);
+                console.log(res.data);
             })
             .catch((err) => {
                 console.error("Error: ", err);
@@ -55,7 +56,7 @@ const Compras = () => {
                                 >
                                     {detalle.product?.Imagen && (
                                         <img
-                                            src={detalle.product.Imagen}
+                                            src={`data:image/jpeg;base64,${detalle.product.Imagen}`}
                                             alt={detalle.product.Nombre}
                                             className="w-24 h-24 object-cover rounded-lg border"
                                         />
@@ -92,9 +93,33 @@ const Compras = () => {
                         </div>
 
                         <div className="text-right mt-4 border-t pt-4">
-                            <span className="text-xl font-semibold text-green-700">
+                            <span
+                                className="text-xl font-semibold text-gray-900
+"
+                            >
                                 Total: ${orden.Total.toFixed(2)}
                             </span>
+                        </div>
+                        <div className="flex justify-end gap-4 mt-4">
+                            <button
+                                onClick={() =>
+                                    console.log("Ver compra", orden.idOrden)
+                                }
+                                className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold px-4 py-2 rounded-md shadow transition"
+                            >
+                                Ver Compra
+                            </button>
+                            <button
+                                onClick={() =>
+                                    console.log(
+                                        "Volver a comprar",
+                                        orden.idOrden
+                                    )
+                                }
+                                className="bg-[#3b4f68] text-yellow-400 hover:bg-[#232f3e]font-semibold px-4 py-2 rounded-md shadow transition"
+                            >
+                                Volver a Comprar
+                            </button>
                         </div>
                     </div>
                 ))

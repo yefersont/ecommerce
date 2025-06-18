@@ -92,7 +92,7 @@ const CompraEnvio = () => {
             ) : (
                 <form
                     onSubmit={handleSubmit(onSubmit)}
-                    className="w-full max-w-6xl mx-auto bg-white p-6 shadow-md rounded-md"
+                    className="w-full max-w-4xl mx-auto mt-5 bg-white bg-opacity-80 p-8 rounded-2xl shadow-none"
                 >
                     <h2 className="text-2xl font-bold mb-6">
                         Información de Envío
@@ -121,7 +121,7 @@ const CompraEnvio = () => {
                                             },
                                         })}
                                         placeholder="Nombre completo"
-                                        className="w-full border p-2 rounded text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
+                                        className="w-full px-4 py-2 rounded-xl text-sm bg-white border border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400"
                                         onInput={handleNombreInput}
                                     />
                                     {errors.nombreCompleto && (
@@ -147,7 +147,7 @@ const CompraEnvio = () => {
                                             },
                                         })}
                                         placeholder="Cédula o NIT"
-                                        className="w-full border p-2 rounded text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
+                                        className="w-full px-4 py-2 rounded-xl text-sm bg-white border border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400"
                                         onInput={handleIdentificacionInput}
                                     />
                                     {errors.identificacion && (
@@ -173,7 +173,7 @@ const CompraEnvio = () => {
                                             },
                                         })}
                                         placeholder="Número de teléfono"
-                                        className="w-full border p-2 rounded text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
+                                        className="w-full px-4 py-2 rounded-xl text-sm bg-white border border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400"
                                         onInput={handleTelefonoInput}
                                     />
                                     {errors.telefono && (
@@ -199,7 +199,7 @@ const CompraEnvio = () => {
                                             },
                                         })}
                                         placeholder="Correo electrónico"
-                                        className="w-full border p-2 rounded text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
+                                        className="w-full px-4 py-2 rounded-xl text-sm bg-white border border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400"
                                     />
                                     {errors.correo && (
                                         <p className="text-red-500 text-xs mt-0.5">
@@ -219,7 +219,7 @@ const CompraEnvio = () => {
                             <div className="space-y-3">
                                 <div className="flex gap-4">
                                     <div className="flex-1">
-                                        <label className="block font-medium mb-1 text-sm text-gray-700">
+                                        <label className="block font-medium mb-1 text-sm text-gray-800">
                                             Departamento
                                         </label>
                                         <div className="relative">
@@ -228,7 +228,7 @@ const CompraEnvio = () => {
                                                     required:
                                                         "Este campo es obligatorio",
                                                 })}
-                                                className="w-full appearance-none border border-gray-300 bg-white px-4 py-2 pr-10 rounded shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
+                                                className="w-full appearance-none bg-white px-4 py-2 pr-10 rounded-xl text-sm border border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400"
                                             >
                                                 <option value="">
                                                     Selecciona un departamento
@@ -247,10 +247,9 @@ const CompraEnvio = () => {
                                                 ))}
                                             </select>
 
-                                            {/* Ícono de flecha hacia abajo */}
-                                            <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-400">
+                                            <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-yellow-400">
                                                 <svg
-                                                    className="w-4 h-4"
+                                                    className="w-5 h-5"
                                                     fill="none"
                                                     stroke="currentColor"
                                                     viewBox="0 0 24 24"
@@ -264,7 +263,6 @@ const CompraEnvio = () => {
                                                 </svg>
                                             </div>
                                         </div>
-
                                         {errors.departamento && (
                                             <p className="text-red-500 text-xs mt-1">
                                                 {errors.departamento.message}
@@ -273,7 +271,7 @@ const CompraEnvio = () => {
                                     </div>
 
                                     <div className="flex-1">
-                                        <label className="block font-medium mb-1 text-sm text-gray-700">
+                                        <label className="block font-medium mb-1 text-sm text-gray-800">
                                             Ciudad
                                         </label>
                                         <div className="relative">
@@ -283,7 +281,11 @@ const CompraEnvio = () => {
                                                         "Este campo es obligatorio",
                                                 })}
                                                 disabled={ciudades.length === 0}
-                                                className="w-full appearance-none border border-gray-300 bg-white px-4 py-2 pr-10 rounded shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
+                                                className={`w-full appearance-none bg-white px-4 py-2 pr-10 rounded-xl text-sm border ${
+                                                    ciudades.length === 0
+                                                        ? "border-gray-300 text-gray-400"
+                                                        : "border-yellow-400"
+                                                } focus:outline-none focus:ring-2 focus:ring-yellow-400`}
                                             >
                                                 <option value="">
                                                     {ciudades.length === 0
@@ -302,9 +304,9 @@ const CompraEnvio = () => {
                                                 ))}
                                             </select>
 
-                                            <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-400">
+                                            <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-yellow-400">
                                                 <svg
-                                                    className="w-4 h-4"
+                                                    className="w-5 h-5"
                                                     fill="none"
                                                     stroke="currentColor"
                                                     viewBox="0 0 24 24"
@@ -336,7 +338,7 @@ const CompraEnvio = () => {
                                                 "Este campo es obligatorio",
                                         })}
                                         placeholder="Dirección completa"
-                                        className="w-full border p-2 rounded text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
+                                        className="w-full px-4 py-2 rounded-xl text-sm bg-white border border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400"
                                     />
                                     {errors.direccionPrincipal && (
                                         <p className="text-red-500 text-xs mt-0.5">
@@ -352,7 +354,7 @@ const CompraEnvio = () => {
                                     <input
                                         {...register("direccionAlternativa")}
                                         placeholder="Apto, piso u otra referencia"
-                                        className="w-full border p-2 rounded text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
+                                        className="w-full px-4 py-2 rounded-xl text-sm bg-white border border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400"
                                     />
                                 </div>
 
@@ -363,7 +365,7 @@ const CompraEnvio = () => {
                                     <input
                                         {...register("codigoPostal")}
                                         placeholder="Código postal"
-                                        className="w-full border p-2 rounded text-sm  focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
+                                        className="w-full px-4 py-2 rounded-xl text-sm bg-white border border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400"
                                     />
                                 </div>
 
@@ -375,7 +377,7 @@ const CompraEnvio = () => {
                                         {...register("instrucciones")}
                                         placeholder="Ej. no timbrar, dejar en portería"
                                         rows={3}
-                                        className="w-full border p-2 rounded resize-none text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
+                                        className="w-full px-4 py-2 rounded-xl text-sm bg-white border border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400"
                                     />
                                 </div>
                             </div>
@@ -384,7 +386,7 @@ const CompraEnvio = () => {
 
                     <div className="mt-6 flex justify-end">
                         <button
-                            className="px-20 py-2 bg-[#232f3e] mr-9 text-yellow-400 rounded hover:bg-[#3b4f68]"
+                            className="px-10 py-2 bg-[#232f3e] mr-5 text-yellow-400 rounded hover:bg-[#3b4f68]"
                             onClick={() => {
                                 navigate("/productos");
                             }}
@@ -393,7 +395,7 @@ const CompraEnvio = () => {
                         </button>
                         <button
                             type="submit"
-                            className="px-20 py-2 bg-yellow-400 ml-8 text-black rounded hover:bg-yellow-500"
+                            className="px-10 py-2 bg-yellow-400 ml-20 text-black rounded hover:bg-yellow-500"
                         >
                             Continuar
                         </button>

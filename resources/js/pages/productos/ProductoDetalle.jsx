@@ -72,11 +72,6 @@ const ProductoDetalle = () => {
     };
 
     const addToCart = () => {
-        console.log({
-            Productos_idProducts: parseInt(id),
-            Cantidad: cantidad,
-            Usuarios_idUsuarios: parseInt(idUsuario),
-        });
         axios
             .post(`http://127.0.0.1:8000/api/carrito`, {
                 Productos_idProducts: id,
@@ -89,10 +84,19 @@ const ProductoDetalle = () => {
                     icon: "success",
                     confirmButtonText: "Aceptar",
                 });
+
+                axios
+                    .get(`http://127.0.0.1:8000/api/productos/${id}`)
+                    .then((response) => {
+                        setProducto(response.data);
+                    })
+                    .catch((error) =>
+                        console.error("Error al actualizar el stock:", error)
+                    );
             })
             .catch(() => {
                 Swal.fire({
-                    title: "Error al agreagar al Carrito!",
+                    title: "Error al agregar al Carrito!",
                     icon: "warning",
                     confirmButtonText: "Aceptar",
                 });
@@ -108,53 +112,56 @@ const ProductoDetalle = () => {
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.9, ease: "easeOut" }}
-                    className="p-4"
+                    className="p-6"
                 >
-                    <div className="p-6 mt-10">
-                        <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-8">
-                            {/* Imagen con zoom */}
-                            <div className="md:col-span-1 bg-white shadow p-4">
-                                <div
-                                    className="relative w-full aspect-square cursor-pointer overflow-hidden border"
-                                    onMouseEnter={() => setIsZoomed(true)}
-                                    onMouseLeave={() => setIsZoomed(false)}
-                                    onClick={() => setModalImagenAbierto(true)}
-                                    onMouseMove={handleMouseMove}
-                                    style={{
-                                        backgroundImage: `url(${imagenSrc})`,
-                                        backgroundSize: isZoomed
-                                            ? "200%"
-                                            : "100%",
-                                        backgroundPosition: `${
-                                            (zoomPos.x / 400) * 100
-                                        }% ${(zoomPos.y / 400) * 100}%`,
-                                        backgroundRepeat: "no-repeat",
-                                    }}
-                                ></div>
-                            </div>
+                    <div className="max-w-6xl mx-auto mt-10 bg-white rounded-xl shadow-lg overflow-hidden md:flex">
+                        {/* Imagen con zoom */}
+                        <div className="md:w-1/2 p-6 flex items-center justify-center">
+                            <div
+                                className="relative w-full aspect-square max-w-sm border rounded-lg overflow-hidden cursor-pointer shadow"
+                                onMouseEnter={() => setIsZoomed(true)}
+                                onMouseLeave={() => setIsZoomed(false)}
+                                onClick={() => setModalImagenAbierto(true)}
+                                onMouseMove={handleMouseMove}
+                                style={{
+                                    backgroundImage: `url(${imagenSrc})`,
+                                    backgroundSize: isZoomed ? "200%" : "100%",
+                                    backgroundPosition: `${
+                                        (zoomPos.x / 400) * 100
+                                    }% ${(zoomPos.y / 400) * 100}%`,
+                                    backgroundRepeat: "no-repeat",
+                                }}
+                            ></div>
+                        </div>
 
-                            {/* Detalles del producto */}
-                            <div className="md:col-span-2 bg-white shadow p-8 space-y-6">
-                                <h1 className="text-3xl font-semibold text-gray-900">
+                        {/* Detalles del producto */}
+                        <div className="md:w-1/2 p-8 space-y-6 flex flex-col justify-between">
+                            <div>
+                                <h1 className="text-3xl font-bold text-gray-900 mb-2">
                                     {producto.Nombre}
                                 </h1>
-                                <p className="text-gray-700 text-lg">
+                                <p className="text-gray-700 mb-4 whitespace-pre-line">
                                     {producto.Descripcion}
                                 </p>
-                                <p className="text-gray-600">
+                                <p className="text-sm text-gray-500">
                                     Disponibles: {producto.Stock} Unds
                                 </p>
 
-                                {/* Precio normal */}
-                                <div className="text-xl text-gray-900">
+                                <div className="text-2xl font-semibold text-yellow-500 mt-2">
                                     $
                                     {parseFloat(producto.Precio).toLocaleString(
                                         "es-CO"
                                     )}
                                 </div>
+                            </div>
 
-                                {/* Selector de cantidad */}
-                                <div className="flex items-center">
+                            {/* Controles */}
+                            <div className="space-y-4">
+                                {/* Selector cantidad */}
+                                <div className="flex items-center gap-4">
+                                    <span className="font-medium text-gray-700">
+                                        Cantidad:
+                                    </span>
                                     <div className="flex items-center border rounded-full overflow-hidden shadow-sm">
                                         <button
                                             onClick={() =>
@@ -162,7 +169,7 @@ const ProductoDetalle = () => {
                                                     Math.max(1, prev - 1)
                                                 )
                                             }
-                                            className="px-4 py-2 text-gray-700 hover:bg-gray-200 transition"
+                                            className="px-4 py-2 text-gray-700 hover:bg-gray-200"
                                         >
                                             −
                                         </button>
@@ -198,24 +205,25 @@ const ProductoDetalle = () => {
                                                         : prev
                                                 )
                                             }
-                                            className="px-4 py-2 text-gray-700 hover:bg-gray-200 transition"
+                                            className="px-4 py-2 text-gray-700 hover:bg-gray-200"
                                         >
                                             +
                                         </button>
                                     </div>
                                 </div>
 
-                                {/* Botones */}
-                                <div className="flex flex-wrap gap-3 pt-2">
+                                {/* Botones acción */}
+                                <div className="grid sm:grid-cols-2 gap-3">
                                     <button
-                                        className="w-full py-2 bg-yellow-400 hover:bg-yellow-500 text-black flex items-center justify-center gap-2"
+                                        className="py-2 bg-yellow-400 hover:bg-yellow-500 text-black flex items-center justify-center gap-2 rounded"
                                         onClick={addToCart}
                                     >
                                         <ShoppingCart size={20} />
                                         Agregar al Carrito
                                     </button>
+
                                     <button
-                                        className="w-full py-2 bg-[#3b4f68] text-yellow-400   hover:bg-[#232f3e]"
+                                        className="py-2 bg-[#3b4f68] text-yellow-400 hover:bg-[#232f3e] rounded"
                                         onClick={() => navigate("/productos")}
                                     >
                                         Volver
@@ -224,25 +232,20 @@ const ProductoDetalle = () => {
                                     {role === "1" && (
                                         <>
                                             <button
-                                                className="bg-yellow-400 hover:bg-yellow-500 text-black py-2 px-4 rounded transition flex items-center"
+                                                className="py-2 bg-blue-500 hover:bg-blue-600 text-white rounded flex items-center justify-center gap-2"
                                                 onClick={() =>
                                                     setModalEditarAbierto(true)
                                                 }
                                             >
-                                                <Pen
-                                                    size={20}
-                                                    className="mr-2"
-                                                />
+                                                <Pen size={20} />
                                                 Editar
                                             </button>
+
                                             <button
-                                                className="bg-yellow-400 hover:bg-yellow-500 text-black py-2 px-4 rounded transition flex items-center"
+                                                className="py-2 bg-red-500 hover:bg-red-600 text-white rounded flex items-center justify-center gap-2"
                                                 onClick={EliminarProducto}
                                             >
-                                                <Trash2
-                                                    size={20}
-                                                    className="mr-2"
-                                                />
+                                                <Trash2 size={20} />
                                                 Eliminar
                                             </button>
                                         </>
@@ -250,48 +253,46 @@ const ProductoDetalle = () => {
                                 </div>
                             </div>
                         </div>
-
-                        {/* Modal de imagen ampliada */}
-                        {modalImagenAbierto && (
-                            <div
-                                className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50"
-                                onClick={() => setModalImagenAbierto(false)}
-                            >
-                                <div
-                                    className="relative max-w-4xl w-full p-4"
-                                    onClick={(e) => e.stopPropagation()}
-                                >
-                                    <button
-                                        className="absolute top-2 right-2 text-white bg-black bg-opacity-50 rounded-full p-1"
-                                        onClick={() =>
-                                            setModalImagenAbierto(false)
-                                        }
-                                    >
-                                        <X size={24} />
-                                    </button>
-                                    <img
-                                        src={imagenSrc}
-                                        alt="Imagen ampliada"
-                                        className="w-full max-h-[80vh] object-contain rounded-lg"
-                                    />
-                                </div>
-                            </div>
-                        )}
-
-                        {/* Modal de Edición */}
-                        {modalEditarAbierto && (
-                            <Modal
-                                isOpen={modalEditarAbierto}
-                                onClose={() => setModalEditarAbierto(false)}
-                                title="Editar Producto"
-                            >
-                                <ProductoFormEditar
-                                    producto={producto}
-                                    onClose={() => setModalEditarAbierto(false)}
-                                />
-                            </Modal>
-                        )}
                     </div>
+
+                    {/* Modal Imagen */}
+                    {modalImagenAbierto && (
+                        <div
+                            className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50"
+                            onClick={() => setModalImagenAbierto(false)}
+                        >
+                            <div
+                                className="relative max-w-4xl w-full p-4"
+                                onClick={(e) => e.stopPropagation()}
+                            >
+                                <button
+                                    className="absolute top-2 right-2 text-white bg-black bg-opacity-50 rounded-full p-1"
+                                    onClick={() => setModalImagenAbierto(false)}
+                                >
+                                    <X size={24} />
+                                </button>
+                                <img
+                                    src={imagenSrc}
+                                    alt="Imagen ampliada"
+                                    className="w-full max-h-[80vh] object-contain rounded-lg"
+                                />
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Modal Editar */}
+                    {modalEditarAbierto && (
+                        <Modal
+                            isOpen={modalEditarAbierto}
+                            onClose={() => setModalEditarAbierto(false)}
+                            title="Editar Producto"
+                        >
+                            <ProductoFormEditar
+                                producto={producto}
+                                onClose={() => setModalEditarAbierto(false)}
+                            />
+                        </Modal>
+                    )}
                 </motion.div>
             )}
         </div>

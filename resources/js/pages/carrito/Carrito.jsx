@@ -4,6 +4,8 @@ import Swal from "sweetalert2";
 import { Users, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Loader from "../../components/Loader";
+import { motion } from "framer-motion";
+
 const Carrito = ({ onClose }) => {
     const [carrito, setCarrito] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -77,24 +79,26 @@ const Carrito = ({ onClose }) => {
     }, 0);
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-            <div className="bg-white w-full max-w-lg max-h-[90vh] rounded-xl shadow-lg relative overflow-hidden flex flex-col">
+        <div className="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center">
+            <div className="bg-white w-full max-w-lg max-h-[90vh] rounded-2xl shadow-2xl relative flex flex-col overflow-hidden">
                 {/* Botón cerrar */}
                 <button
                     onClick={onClose}
-                    className="absolute top-4 right-4 text-gray-500 hover:text-gray-800 z-10"
+                    className="absolute top-4 right-4 text-gray-500 hover:text-gray-800"
                 >
                     <X className="w-5 h-5" />
                 </button>
 
                 {/* Header */}
-                <div className="p-5 border-b text-lg font-semibold">
+                <div className="p-5 border-b bg-gray-50 text-lg font-bold text-gray-800">
                     Tu carrito de compras
                 </div>
 
                 {/* Contenido */}
                 <div className="px-5 py-3 flex-1 overflow-y-auto">
-                    {carrito.length === 0 ? (
+                    {loading ? (
+                        <Loader />
+                    ) : carrito.length === 0 ? (
                         <p className="text-center text-gray-500 mt-10">
                             Tu carrito está vacío.
                         </p>
@@ -107,15 +111,15 @@ const Carrito = ({ onClose }) => {
                             return (
                                 <div
                                     key={index}
-                                    className="flex items-start gap-4 py-4 border-b"
+                                    className="flex items-start gap-4 py-4 border-b group"
                                 >
                                     <img
                                         src={`data:image/jpeg;base64,${item.product.Imagen}`}
                                         alt={item.product.Nombre}
-                                        className="w-16 h-16 object-cover rounded"
+                                        className="w-16 h-16 object-cover rounded border"
                                     />
                                     <div className="flex-1">
-                                        <p className="text-sm font-medium">
+                                        <p className="text-sm font-semibold text-gray-800">
                                             {item.product.Nombre}
                                         </p>
                                         <p className="text-xs text-gray-500">
@@ -125,7 +129,7 @@ const Carrito = ({ onClose }) => {
                                             Precio: $
                                             {precio.toLocaleString("es-CO")}
                                         </p>
-                                        <p className="text-sm font-semibold mt-1">
+                                        <p className="text-sm font-semibold text-yellow-600 mt-1">
                                             Total: $
                                             {total.toLocaleString("es-CO")}
                                         </p>
@@ -134,7 +138,7 @@ const Carrito = ({ onClose }) => {
                                         onClick={() =>
                                             eliminarProductoCarrito(item)
                                         }
-                                        className="text-sm text-red-500 hover:text-red-700"
+                                        className="text-red-500 hover:text-red-700"
                                     >
                                         <X className="w-4 h-4" />
                                     </button>
@@ -144,25 +148,27 @@ const Carrito = ({ onClose }) => {
                     )}
                 </div>
 
-                {/* Resumen y botones */}
+                {/* Footer */}
                 {carrito.length > 0 && (
-                    <div className="p-5 border-t bg-white">
-                        <div className="flex justify-between mb-3 text-base font-medium">
+                    <div className="p-5 border-t bg-gray-50">
+                        <div className="flex justify-between mb-3 text-base font-semibold">
                             <span>Total:</span>
-                            <span>${totalGeneral.toLocaleString("es-CO")}</span>
+                            <span className="text-yellow-600">
+                                ${totalGeneral.toLocaleString("es-CO")}
+                            </span>
                         </div>
                         <div className="flex gap-3">
                             <button
                                 onClick={vaciarCarrito}
-                                className="w-1/2 py-2  bg-[#3b4f68] text-yellow-400   hover:bg-[#232f3e]"
+                                className="w-1/2 py-2 rounded bg-[#3b4f68] text-yellow-400 hover:bg-[#232f3e] transition"
                             >
                                 Vaciar
                             </button>
                             <button
                                 onClick={comprar}
-                                className="w-1/2 py-2 bg-yellow-400 text-black  hover:bg-yellow-500"
+                                className="w-1/2 py-2 rounded bg-yellow-400 text-black hover:bg-yellow-500 transition"
                             >
-                                ¡Proceder con la compra!
+                                ¡Comprar!
                             </button>
                         </div>
                     </div>

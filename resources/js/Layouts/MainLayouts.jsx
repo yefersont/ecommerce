@@ -15,7 +15,6 @@ const MainLayout = ({ children }) => {
     const hanleOut = () => {
         localStorage.removeItem("token");
         localStorage.removeItem("User");
-        alert("Cerrando sesión...");
         window.location.href = "/login";
     };
 
@@ -36,7 +35,6 @@ const MainLayout = ({ children }) => {
                     E-e<span className="text-yellow-500">commerce</span>
                 </span>
 
-                {/* Opciones de usuario */}
                 <nav className="flex gap-6 items-center px-4">
                     <div className="text-sm text-right">
                         <span className="block">

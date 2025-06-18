@@ -62,6 +62,8 @@ Route::middleware(['auth:sanctum', 'check.token.expiry'])->group(function () {
     // Ciudad por departamento
     Route::get('/departamentos/{id}/ciudades', [CiudadesController::class, 'porDepartamento']);
     // Tarjeta por usuario
+    Route::post('/tarjetas', [TarjetaController::class, 'store']);
+
     Route::get('/tarjetas/{id}', [TarjetaController::class, 'TarjetaPorUsuario']);
     // orden de compra
     Route::post('/ordencompra', [OrdenController::class, 'store']);
@@ -69,7 +71,5 @@ Route::middleware(['auth:sanctum', 'check.token.expiry'])->group(function () {
     Route::post('/datosenvio', [DatosenvioController::class, 'store']);
     // Orden de compra
     Route::post('/ordendetalle', [OrdenDetalleController::class, 'store']);
-    Route::get('/ordenes/usuario/{idUsuario}', [OrdenController::class, 'OrdenPorUsuario']);
 });
-
-Route::post('/tarjetas', [TarjetaController::class, 'store']);
+Route::get('/ordenes/usuario/{idUsuario}', [OrdenController::class, 'OrdenPorUsuario']);

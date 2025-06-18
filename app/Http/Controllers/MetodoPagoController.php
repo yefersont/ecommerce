@@ -12,8 +12,6 @@ class MetodoPagoController extends Controller
      */
     public function index()
     {
-        //
-
         $metodos = Metodospago::all();
 
         return response()->json([$metodos]);

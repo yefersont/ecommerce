@@ -30,7 +30,6 @@ class AuthController extends Controller
             $tokenResult = $user->createToken('auth_token');
             $token = $tokenResult->plainTextToken;
 
-            // Establecer expiración en 2 horas
             $tokenResult->accessToken->expires_at = now()->addHours(2);
             $tokenResult->accessToken->save();
 

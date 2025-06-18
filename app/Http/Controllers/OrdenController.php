@@ -41,10 +41,8 @@ class OrdenController extends Controller
             foreach ($ordenes as $orden) {
                 foreach ($orden->ordendetalles as $detalle) {
                     $detalle->subtotal = $detalle->Cantidad * $detalle->PrecioUnitario;
-
-                    if (isset($detalle->product->Imagen) && $detalle->product->Imagen) {
-                        $mimeType = finfo_buffer(finfo_open(), $detalle->product->Imagen, FILEINFO_MIME_TYPE);
-                        $detalle->product->Imagen = 'data:' . $mimeType . ';base64,' . base64_encode($detalle->product->Imagen);
+                    if (!empty($detalle->product->Imagen)) {
+                        $detalle->product->Imagen = base64_encode($detalle->product->Imagen);
                     }
                 }
             }

@@ -1,33 +1,32 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { ShoppingCart, Pen, Trash2 } from "lucide-react";
 
 const ProductoCard = ({ producto }) => {
     return (
-        <div className="bg-gray-100 border-t p-4 flex w-full relative hover:shadow-md transition-shadow duration-300">
-            <Link
-                to={`/producto/${producto.idProductos}`}
-                className="flex-1 flex gap-4"
-            >
-                <div className="w-32 h-32 flex items-center justify-center rounded-md bg-white p-2 flex-shrink-0">
+        <div className="bg-white rounded-xl shadow hover:shadow-lg transition-shadow duration-300 overflow-hidden border border-gray-200">
+            <Link to={`/producto/${producto.idProductos}`}>
+                {/* Imagen */}
+                <div className="bg-white h-60 w-full overflow-hidden rounded-md flex items-center justify-center">
                     <img
                         src={`data:image/jpeg;base64,${producto.Imagen}`}
                         alt={producto.Nombre}
-                        className="max-h-full object-contain"
+                        className="h-full object-contain p-2"
                     />
                 </div>
 
-                <div className="flex-1 ml-6 flex flex-col justify-between">
-                    <div>
-                        <h2 className="text-xl font-semibold text-gray-800 mb-1">
-                            {producto.Nombre}
-                        </h2>
-                        <p className="text-gray-600 text-sm mb-2 line-clamp-2">
-                            {producto.Descripcion}
-                        </p>
-                        <div className="text-lg font-bold text-gray-900">
+                {/* Contenido */}
+                <div className="p-4 flex flex-col justify-between h-[160px]">
+                    <h2 className="text-lg font-semibold text-gray-800 line-clamp-1">
+                        {producto.Nombre}
+                    </h2>
+                    <p className="text-sm text-gray-600 line-clamp-2">
+                        {producto.Descripcion}
+                    </p>
+
+                    <div className="mt-3 text-right">
+                        <span className="text-xl font-bold text-yellow-500">
                             ${producto.Precio}
-                        </div>
+                        </span>
                     </div>
                 </div>
             </Link>
