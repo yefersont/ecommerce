@@ -8,6 +8,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+
 
 /**
  * Class Usuario
@@ -24,8 +29,10 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @package App\Models
  */
-class Usuario extends Model
+class Usuario extends Authenticatable
 {
+	use HasApiTokens, HasFactory, Notifiable;
+
 	protected $table = 'usuarios';
 	protected $primaryKey = 'idUsuarios';
 	public $timestamps = false;
@@ -36,7 +43,8 @@ class Usuario extends Model
 		'Name',
 		'RollSuario_idTp_Rol',
 		'User',
-		'Password'
+		'Password',
+		'google_id'
 	];
 	public function datosenvios()
 	{

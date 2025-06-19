@@ -16,11 +16,13 @@ class User extends Authenticatable
     protected $primaryKey = 'idUsuarios';
     public $timestamps = false;
 
+
     protected $fillable = [
         'Name',
         'RollSuario_idTp_Rol',
         'User',
         'Password',
+        'google_id'
     ];
 
     protected $hidden = [
@@ -29,6 +31,7 @@ class User extends Authenticatable
 
     protected $casts = [
         'Password' => 'hashed',
+        'RollSuario_idTp_Rol' => 'int',
     ];
 
     public function getAuthIdentifierName()
@@ -54,5 +57,9 @@ class User extends Authenticatable
     public function ordens()
     {
         return $this->hasMany(Orden::class, 'Usuarios_idUsuarios');
+    }
+    public function tarjetas()
+    {
+        return $this->hasMany(Tarjeta::class, 'Usuarios_idUsuarios');
     }
 }

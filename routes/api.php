@@ -16,7 +16,7 @@ use App\Http\Controllers\TarjetaController;
 use App\Http\Controllers\DatosenvioController;
 use App\Http\Controllers\OrdenController;
 use App\Http\Controllers\OrdenDetalleController;
-
+use App\Http\Controllers\GoogleAuthController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -29,11 +29,10 @@ use App\Http\Controllers\OrdenDetalleController;
 */
 // Login 
 
-
 Route::post('/register', [UsuarioController::class, 'store']);
-
 Route::post('/login', [AuthController::class, 'login']);
-
+Route::get('/auth/google', [GoogleAuthController::class, 'redirectToGoogle']);
+Route::get('/auth/callback/google', [GoogleAuthController::class, 'handleGoogleCallback']);
 
 Route::middleware(['auth:sanctum', 'check.token.expiry'])->group(function () {
 
@@ -71,5 +70,5 @@ Route::middleware(['auth:sanctum', 'check.token.expiry'])->group(function () {
     Route::post('/datosenvio', [DatosenvioController::class, 'store']);
     // Orden de compra
     Route::post('/ordendetalle', [OrdenDetalleController::class, 'store']);
+    Route::get('/ordenes/usuario/{idUsuario}', [OrdenController::class, 'OrdenPorUsuario']);
 });
-Route::get('/ordenes/usuario/{idUsuario}', [OrdenController::class, 'OrdenPorUsuario']);

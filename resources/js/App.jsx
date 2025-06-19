@@ -14,6 +14,8 @@ import SeleccionarTarjeta from "./pages/compra/SeleccionarTarjeta";
 import ResumenPago from "./pages/compra/ResumenPago";
 import Compras from "./pages/compra/Compras";
 import Register from "./pages/login/Register";
+import GoogleCallback from "./pages/login/GoogleCallback";
+
 import { CompraProvider } from "./components/context/CompraContext";
 const token = localStorage.getItem("token");
 
@@ -41,6 +43,7 @@ function App() {
                 {/* Ruta de login */}
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
+                <Route path="/google/callback" element={<GoogleCallback />} />
 
                 {/* Rutas protegidas */}
                 <Route
