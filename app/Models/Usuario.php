@@ -67,4 +67,8 @@ class Usuario extends Authenticatable
 	{
 		return $this->hasMany(Tarjeta::class, 'Usuarios_idUsuarios');
 	}
+	public function comentario()
+	{
+		return $this->hasMany(Comentario::class, 'Usuarios_idUsuarios');
+	}
 }

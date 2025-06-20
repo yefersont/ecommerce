@@ -61,4 +61,8 @@ class Product extends Model
 	{
 		return $this->hasMany(Ordendetalle::class, 'Producto_id');
 	}
+	public function comentario()
+	{
+		return $this->hasMany(Comentario::class, 'Producto_idProducto');
+	}
 }
