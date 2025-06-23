@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\Comentario;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -15,8 +16,6 @@ class ProductoController extends Controller
     public function index()
     {
         $productos = Product::all();
-
-
 
         foreach ($productos as $producto) {
             if ($producto->Imagen) {
@@ -111,7 +110,7 @@ class ProductoController extends Controller
      */
     public function show($id)
     {
-        $producto = Product::find($id);
+        $producto = Product::with('comentarios.usuario')->find($id);
 
         if (!$producto) {
             return response()->json(['error' => 'Producto no encontrado'], 404);
@@ -123,6 +122,9 @@ class ProductoController extends Controller
 
         return response()->json($producto, 200, [], JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_IGNORE);
     }
+
+
+
 
     public function porCategoria($id)
     {

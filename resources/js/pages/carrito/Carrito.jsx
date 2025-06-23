@@ -35,6 +35,10 @@ const Carrito = ({ onClose }) => {
             showCancelButton: true,
             confirmButtonText: "Vaciar",
             cancelButtonText: "Cancelar",
+            confirmButtonColor: "#facc15",
+            cancelButtonColor: "#3b4f68",
+            background: "#ffffff",
+            color: "#333333",
         }).then((result) => {
             if (result.isConfirmed) {
                 axios
@@ -43,11 +47,27 @@ const Carrito = ({ onClose }) => {
                     )
                     .then(() => {
                         setCarrito([]);
-                        Swal.fire("Carrito vaciado", "", "success");
+                        Swal.fire({
+                            title: "Carrito vaciado",
+                            text: "Todos los productos fueron eliminados 🛒",
+                            icon: "success",
+                            confirmButtonText: "Aceptar",
+                            confirmButtonColor: "#facc15", // amarillo (Tailwind)
+                            background: "#ffffff", // fondo blanco
+                            color: "#333333", // texto oscuro
+                        });
                         onClose();
                     })
                     .catch(() =>
-                        Swal.fire("Error al vaciar el carrito", "", "error")
+                        Swal.fire({
+                            title: "Error al vaciar el carrito",
+                            text: "Ocurrió un problema al intentar eliminar los productos.",
+                            icon: "error",
+                            confirmButtonText: "Aceptar",
+                            confirmButtonColor: "#facc15", // amarillo (Tailwind)
+                            background: "#ffffff", // fondo blanco
+                            color: "#333333", // texto oscuro
+                        })
                     );
             }
         });

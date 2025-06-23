@@ -7,6 +7,7 @@ use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CarritoController;
 use App\Http\Controllers\CiudadesController;
+use App\Http\Controllers\ComentarioController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Middleware\CheckTokenExpiry;
 use App\Models\Usuario;
@@ -17,6 +18,7 @@ use App\Http\Controllers\DatosenvioController;
 use App\Http\Controllers\OrdenController;
 use App\Http\Controllers\OrdenDetalleController;
 use App\Http\Controllers\GoogleAuthController;
+use App\Http\Controllers\MercadoPagoController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -39,10 +41,11 @@ Route::middleware(['auth:sanctum', 'check.token.expiry'])->group(function () {
     Route::get('/user', fn(Request $request) => $request->user());
     // Productos
     Route::get('/productos/filtrar', [ProductoController::class, 'filtrar']);
-    Route::get('/productos/{id}', [ProductoController::class, 'show']);
     Route::delete('/productos/{producto}', [ProductoController::class, 'destroy']);
     Route::post('/productos', [ProductoController::class, 'store']);
     Route::put('/productos/{id}', [ProductoController::class, 'update']);
+    Route::get('/productos/{id}', [ProductoController::class, 'show']);
+
     // Categorias
     Route::get('/categorias', [CategoriaController::class, 'index']);
     Route::get('/categorias/{id}/productos', [ProductoController::class, 'porCategoria']);
@@ -71,4 +74,8 @@ Route::middleware(['auth:sanctum', 'check.token.expiry'])->group(function () {
     // Orden de compra
     Route::post('/ordendetalle', [OrdenDetalleController::class, 'store']);
     Route::get('/ordenes/usuario/{idUsuario}', [OrdenController::class, 'OrdenPorUsuario']);
+    // Comentarios
+    Route::post('/comentarios', [ComentarioController::class, 'store']);
 });
+// Integracion API mercadopago
+Route::post('/webhooks/mercadopago', [MercadoPagoController::class, 'webhook']);

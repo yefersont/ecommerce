@@ -31,7 +31,10 @@ const MainLayout = ({ children }) => {
         <div className="font-sans bg-gray-100 min-h-screen">
             {/* Navbar estilo Amazon */}
             <header className="bg-[#232f3e] text-white flex items-center justify-between p-3 shadow-md fixed top-0 left-0 right-0 z-50">
-                <span className="text-xl font-bold px-4">
+                <span
+                    className="text-xl font-bold px-4 cursor-pointer"
+                    onClick={() => navigate("/productos")}
+                >
                     E-e<span className="text-yellow-500">commerce</span>
                 </span>
 

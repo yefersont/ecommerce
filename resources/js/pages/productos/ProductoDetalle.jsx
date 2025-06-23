@@ -12,6 +12,10 @@ import { motion } from "framer-motion";
 const ProductoDetalle = () => {
     const { id } = useParams();
     const [producto, setProducto] = useState("");
+    const [comentario, setComentario] = useState("");
+    const [openReplyId, setOpenReplyId] = useState(null);
+    const [respuestas, setRespuestas] = useState({});
+    const [comentarioPadreId, setComentarioPadreId] = useState(null);
     const [modalImagenAbierto, setModalImagenAbierto] = useState(false); // Modal para la imagen
     const [modalEditarAbierto, setModalEditarAbierto] = useState(false); // Modal para editar el producto
     const [isZoomed, setIsZoomed] = useState(false); // Estado para el zoom
@@ -58,7 +62,7 @@ const ProductoDetalle = () => {
                     icon: "success",
                     confirmButtonText: "Aceptar",
                 }).then(() => {
-                    navigate("/productos"); // Redirige solo después de aceptar
+                    navigate("/productos");
                 });
             })
             .catch(() => {
@@ -81,8 +85,12 @@ const ProductoDetalle = () => {
             .then(() => {
                 Swal.fire({
                     title: "¡Agregado al Carrito!",
+                    text: "El producto fue añadido correctamente 🛒",
                     icon: "success",
                     confirmButtonText: "Aceptar",
+                    confirmButtonColor: "#facc15",
+                    background: "#ffffff",
+                    color: "#333333",
                 });
 
                 axios
@@ -103,6 +111,68 @@ const ProductoDetalle = () => {
             });
     };
 
+    const HandleComentario = (e, comentarioPadreId = null) => {
+        e.preventDefault();
+
+        const textoComentario = comentarioPadreId
+            ? respuestas[comentarioPadreId]?.trim()
+            : comentario.trim();
+
+        if (!textoComentario) {
+            Swal.fire({
+                title: "Campo vacío",
+                text: "Escribe un comentario antes de enviar.",
+                icon: "warning",
+                confirmButtonText: "Entendido",
+                confirmButtonColor: "#facc15",
+                background: "#ffffff",
+                color: "#333333",
+            });
+            return;
+        }
+
+        const data = {
+            Comentario: textoComentario,
+            Usuarios_idUsuarios: idUsuario,
+            Producto_idProducto: id,
+        };
+
+        if (comentarioPadreId) {
+            data.Comentario_padre_id = comentarioPadreId;
+        }
+
+        axios
+            .post(`http://127.0.0.1:8000/api/comentarios`, data)
+            .then(() => {
+                Swal.fire({
+                    title: "¡Comentario enviado!",
+                    text: comentarioPadreId
+                        ? "Tu respuesta fue publicada 📨"
+                        : "Gracias por tu opinión 📝",
+                    icon: "success",
+                    confirmButtonText: "Cerrar",
+                    confirmButtonColor: "#facc15",
+                    background: "#ffffff",
+                    color: "#333333",
+                });
+
+                axios
+                    .get(`http://127.0.0.1:8000/api/productos/${id}`)
+                    .then((res) => setProducto(res.data));
+
+                setComentario("");
+                setOpenReplyId(null);
+                setRespuestas((prev) => ({
+                    ...prev,
+                    [comentarioPadreId]: "",
+                }));
+            })
+            .catch((error) => {
+                console.error("Error al enviar el comentario:", error);
+                Swal.fire("Error", "No se pudo enviar el comentario.", "error");
+            });
+    };
+
     return (
         <div>
             {loading ? (
@@ -114,7 +184,7 @@ const ProductoDetalle = () => {
                     transition={{ duration: 0.9, ease: "easeOut" }}
                     className="p-6"
                 >
-                    <div className="max-w-6xl mx-auto mt-10 bg-white rounded-xl shadow-lg overflow-hidden md:flex">
+                    <div className="max-w-6xl mx-auto  bg-white rounded-xl shadow-lg overflow-hidden md:flex">
                         {/* Imagen con zoom */}
                         <div className="md:w-1/2 p-6 flex items-center justify-center">
                             <div
@@ -253,6 +323,164 @@ const ProductoDetalle = () => {
                                 </div>
                             </div>
                         </div>
+                    </div>
+
+                    {/* Sección de Comentarios */}
+                    <div className="max-w-6xl mx-auto mt-8 bg-white rounded-xl shadow p-6">
+                        <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                            Comentarios o preguntas
+                        </h2>
+                        <div className="mt-6 flex flex-col sm:flex-row items-start sm:items-center gap-3">
+                            <input
+                                value={comentario}
+                                onChange={(e) => setComentario(e.target.value)}
+                                placeholder="Escribe tu pregunta o comentario..."
+                                className="flex-1 border border-gray-300 rounded-md p-3 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-yellow-400 w-full"
+                            />
+
+                            <button
+                                onClick={HandleComentario}
+                                className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold px-10 py-2 rounded whitespace-nowrap"
+                            >
+                                Enviar
+                            </button>
+                        </div>
+                        {producto.comentarios?.length > 0 ? (
+                            <ul className="space-y-4 mt-8">
+                                {producto.comentarios
+                                    .filter(
+                                        (comentario) =>
+                                            comentario.Comentario_padre_id ===
+                                            null
+                                    )
+                                    .map((comentario) => (
+                                        <li
+                                            key={comentario.idComentario}
+                                            className="border-b pb-4 text-gray-800 bg-white rounded-md p-4"
+                                        >
+                                            <div className="flex justify-between items-center">
+                                                <div className="font-semibold text-sm text-yellow-600">
+                                                    {comentario.usuario?.Name ??
+                                                        "Usuario desconocido"}
+                                                </div>
+                                                <div className="text-xs text-gray-500">
+                                                    {comentario.Fecha}
+                                                </div>
+                                            </div>
+
+                                            <p className="text-gray-700 mt-2">
+                                                {comentario.Comentario}
+                                            </p>
+
+                                            {/* Botón responder */}
+                                            <div className="mt-3">
+                                                <button
+                                                    className="text-sm text-yellow-500 font-semibold hover:underline"
+                                                    onClick={() =>
+                                                        setOpenReplyId(
+                                                            openReplyId ===
+                                                                comentario.idComentario
+                                                                ? null
+                                                                : comentario.idComentario
+                                                        )
+                                                    }
+                                                >
+                                                    Responder
+                                                </button>
+                                            </div>
+
+                                            {openReplyId ===
+                                                comentario.idComentario && (
+                                                <div className="mt-4 ml-4 border-l-2 border-gray-200 pl-4 bg-gray-50 rounded-md p-3">
+                                                    <textarea
+                                                        placeholder="Escribe tu respuesta..."
+                                                        rows={2}
+                                                        value={
+                                                            respuestas[
+                                                                comentario
+                                                                    .idComentario
+                                                            ] || ""
+                                                        }
+                                                        onChange={(e) =>
+                                                            setRespuestas(
+                                                                (prev) => ({
+                                                                    ...prev,
+                                                                    [comentario.idComentario]:
+                                                                        e.target
+                                                                            .value,
+                                                                })
+                                                            )
+                                                        }
+                                                        className="w-full border border-gray-300 rounded-md p-2 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-yellow-400 resize-none"
+                                                    ></textarea>
+                                                    <div className="flex gap-2 mt-2">
+                                                        <button
+                                                            className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold px-4 py-1 rounded"
+                                                            onClick={(e) =>
+                                                                HandleComentario(
+                                                                    e,
+                                                                    comentario.idComentario
+                                                                )
+                                                            }
+                                                        >
+                                                            Enviar respuesta
+                                                        </button>
+                                                        <button
+                                                            onClick={() =>
+                                                                setOpenReplyId(
+                                                                    null
+                                                                )
+                                                            }
+                                                            className="text-sm text-gray-600 hover:underline"
+                                                        >
+                                                            Cancelar
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            )}
+
+                                            {/* Respuestas anidadas */}
+                                            {producto.comentarios
+                                                .filter(
+                                                    (respuesta) =>
+                                                        respuesta.Comentario_padre_id ===
+                                                        comentario.idComentario
+                                                )
+                                                .map((respuesta) => (
+                                                    <div
+                                                        key={
+                                                            respuesta.idComentario
+                                                        }
+                                                        className="mt-4 ml-4 border-l-2 border-yellow-300 pl-4 bg-gray-50 rounded-md p-3"
+                                                    >
+                                                        <div className="flex justify-between items-center">
+                                                            <div className="font-medium text-xs text-yellow-600">
+                                                                {respuesta
+                                                                    .usuario
+                                                                    ?.Name ??
+                                                                    "Usuario desconocido"}
+                                                            </div>
+                                                            <div className="text-xs text-gray-500">
+                                                                {
+                                                                    respuesta.Fecha
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                        <p className="text-gray-700 mt-1 text-sm">
+                                                            {
+                                                                respuesta.Comentario
+                                                            }
+                                                        </p>
+                                                    </div>
+                                                ))}
+                                        </li>
+                                    ))}
+                            </ul>
+                        ) : (
+                            <p className="text-gray-500 mt-5">
+                                Este producto aún no tiene comentarios.
+                            </p>
+                        )}
                     </div>
 
                     {/* Modal Imagen */}
