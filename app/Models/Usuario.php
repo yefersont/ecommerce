@@ -71,4 +71,8 @@ class Usuario extends Authenticatable
 	{
 		return $this->hasMany(Comentario::class, 'Usuarios_idUsuarios');
 	}
+	public function historialBusquedas()
+	{
+		return $this->hasMany(HistorialBusqueda::class, 'usuario_id', 'idUsuarios');
+	}
 }

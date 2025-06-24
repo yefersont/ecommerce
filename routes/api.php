@@ -19,6 +19,7 @@ use App\Http\Controllers\OrdenController;
 use App\Http\Controllers\OrdenDetalleController;
 use App\Http\Controllers\GoogleAuthController;
 use App\Http\Controllers\MercadoPagoController;
+use App\Http\Controllers\HistorialBusquedaController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -45,7 +46,6 @@ Route::middleware(['auth:sanctum', 'check.token.expiry'])->group(function () {
     Route::post('/productos', [ProductoController::class, 'store']);
     Route::put('/productos/{id}', [ProductoController::class, 'update']);
     Route::get('/productos/{id}', [ProductoController::class, 'show']);
-
     // Categorias
     Route::get('/categorias', [CategoriaController::class, 'index']);
     Route::get('/categorias/{id}/productos', [ProductoController::class, 'porCategoria']);
@@ -76,6 +76,9 @@ Route::middleware(['auth:sanctum', 'check.token.expiry'])->group(function () {
     Route::get('/ordenes/usuario/{idUsuario}', [OrdenController::class, 'OrdenPorUsuario']);
     // Comentarios
     Route::post('/comentarios', [ComentarioController::class, 'store']);
+    // Historial de busqueda
+    Route::post('/historial-busqueda', [HistorialBusquedaController::class, 'store']);
+    Route::get('/historial-busqueda/{usuario_id}', [HistorialBusquedaController::class, 'index']);
 });
 // Integracion API mercadopago
-Route::post('/webhooks/mercadopago', [MercadoPagoController::class, 'webhook']);
+// Route::post('/webhooks/mercadopago', [MercadoPagoController::class, 'webhook']);

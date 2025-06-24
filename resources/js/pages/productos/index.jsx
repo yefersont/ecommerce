@@ -12,6 +12,7 @@ const ProductosPage = () => {
     const [productos, setProductos] = useState([]);
     const [categorias, setCategorias] = useState([]);
     const [modalAbierto, setModalAbierto] = useState(false);
+    const idUsuario = localStorage.getItem("idUsuarios");
     const role = localStorage.getItem("role");
     const [loading, setLoading] = useState(false);
     const {
@@ -63,6 +64,22 @@ const ProductosPage = () => {
                 setLoading(false);
             });
     };
+
+    const handleBuscar = () => {
+        filtrarProductos(busqueda, categoriaSeleccionada, precioSeleccionado);
+
+        if (busqueda.trim() && idUsuario) {
+            axios
+                .post("http://127.0.0.1:8000/api/historial-busqueda", {
+                    usuario_id: idUsuario,
+                    termino_busqueda: busqueda,
+                })
+                .catch((error) => {
+                    console.error("Error al guardar historial:", error);
+                });
+        }
+    };
+
     useEffect(() => {
         filtrarProductos(busqueda, categoriaSeleccionada, precioSeleccionado);
         fetchCategorias();
@@ -131,21 +148,24 @@ const ProductosPage = () => {
                 </select>
 
                 {/* Buscador */}
-                <input
-                    type="text"
-                    placeholder="Buscar producto..."
-                    className="w-full md:flex-1 px-4 py-2 bg-white border border-gray-300 rounded-md text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 transition"
-                    value={busqueda}
-                    onChange={(e) => {
-                        const valor = e.target.value;
-                        setBusqueda(valor);
-                        filtrarProductos(
-                            valor,
-                            categoriaSeleccionada,
-                            precioSeleccionado
-                        );
-                    }}
-                />
+                <div className="flex gap-2 w-full md:flex-1">
+                    <input
+                        type="text"
+                        placeholder="Buscar producto..."
+                        className="flex-1 px-4 py-2 bg-white border border-gray-300 rounded-md text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 transition"
+                        value={busqueda}
+                        onChange={(e) => setBusqueda(e.target.value)}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter") handleBuscar();
+                        }}
+                    />
+                    <button
+                        onClick={handleBuscar}
+                        className="px-4 py-2 bg-yellow-400 hover:bg-yellow-500 text-black font-semibold rounded-md shadow"
+                    >
+                        Buscar
+                    </button>
+                </div>
             </div>
 
             {/* Lista de productos */}
