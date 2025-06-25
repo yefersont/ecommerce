@@ -1,10 +1,11 @@
 import axios from "axios";
-import { div } from "framer-motion/client";
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Compras = () => {
     const idUsuario = localStorage.getItem("idUsuarios");
     const [ordenes, setOrdenes] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         axios
@@ -103,7 +104,7 @@ const Compras = () => {
                         <div className="flex justify-end gap-4 mt-4">
                             <button
                                 onClick={() =>
-                                    console.log("Ver compra", orden.idOrden)
+                                    navigate(`/compra/${orden.idOrden}`)
                                 }
                                 className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold px-4 py-2 rounded-md shadow transition"
                             >

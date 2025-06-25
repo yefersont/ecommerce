@@ -21,7 +21,6 @@ class OrdenController extends Controller
     public function OrdenPorUsuario($idUsuario)
     {
 
-
         try {
 
             $datosenvio = Datosenvio::where('Usuarios_idUsuarios', $idUsuario)->pluck('idDatosEnvio');
@@ -52,6 +51,37 @@ class OrdenController extends Controller
             return response()->json([
                 "Error" => $e->getMessage()
             ]);
+        }
+    }
+
+    public function InformacionCompra($idUsuario, $idOrden)
+    {
+        try {
+            $orden = Orden::with([
+                'ordendetalles.product',
+                'datosenvio'
+            ])
+                ->where('idOrden', $idOrden)
+                ->whereHas('datosenvio', function ($query) use ($idUsuario) {
+                    $query->where('Usuarios_idUsuarios', $idUsuario);
+                })
+                ->firstOrFail();
+
+            // Calcular subtotales y codificar imagen
+            foreach ($orden->ordendetalles as $detalle) {
+                $detalle->subtotal = $detalle->Cantidad * $detalle->PrecioUnitario;
+
+                if (!empty($detalle->product->Imagen)) {
+                    $detalle->product->Imagen = base64_encode($detalle->product->Imagen);
+                }
+            }
+
+            return response()->json($orden, 200, [], JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_IGNORE);
+        } catch (\Exception $e) {
+            return response()->json([
+                "error" => "No se encontró la orden o no pertenece a este usuario",
+                "detalle" => $e->getMessage()
+            ], 404);
         }
     }
 

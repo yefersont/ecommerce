@@ -14,6 +14,7 @@ import SeleccionarTarjeta from "./pages/compra/SeleccionarTarjeta";
 import ResumenPago from "./pages/compra/ResumenPago";
 import Compras from "./pages/compra/Compras";
 import Register from "./pages/login/Register";
+import InfoCompra from "./pages/infocompra/InfoCompra";
 import GoogleCallback from "./pages/login/GoogleCallback";
 
 import { CompraProvider } from "./components/context/CompraContext";
@@ -128,6 +129,17 @@ function App() {
                         <ProtectedRoute>
                             <MainLayout>
                                 <Compras />
+                            </MainLayout>
+                        </ProtectedRoute>
+                    }
+                />
+
+                <Route
+                    path="/compra/:idOrden"
+                    element={
+                        <ProtectedRoute>
+                            <MainLayout>
+                                <InfoCompra />
                             </MainLayout>
                         </ProtectedRoute>
                     }

@@ -40,7 +40,7 @@ const ProductosPage = () => {
 
         const params = new URLSearchParams();
 
-        if (nombre) params.append("Nombre", nombre);
+        params.append("Nombre", nombre ?? "");
         if (categoriaId) params.append("Categoria_idCategoria", categoriaId);
 
         if (rangoPrecio) {
@@ -54,7 +54,6 @@ const ProductosPage = () => {
                 `http://127.0.0.1:8000/api/productos/filtrar?${params.toString()}`
             )
             .then((response) => {
-                console.log("Respuesta del backend:", response.data);
                 setProductos(response.data);
             })
             .catch((error) => {

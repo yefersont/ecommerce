@@ -74,6 +74,7 @@ Route::middleware(['auth:sanctum', 'check.token.expiry'])->group(function () {
     // Orden de compra
     Route::post('/ordendetalle', [OrdenDetalleController::class, 'store']);
     Route::get('/ordenes/usuario/{idUsuario}', [OrdenController::class, 'OrdenPorUsuario']);
+    Route::get('/informacion-compra/{idUsuario}/{idOrden}', [OrdenController::class, 'InformacionCompra']);
     // Comentarios
     Route::post('/comentarios', [ComentarioController::class, 'store']);
     // Historial de busqueda

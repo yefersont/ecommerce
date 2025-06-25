@@ -35,7 +35,7 @@ class Product extends Model
 	protected $casts = [
 		'Categoria_idCategoria' => 'int',
 		'Precio' => 'float',
-		'Stock' => 'int'
+		'Stock' => 'int',
 	];
 
 	protected $fillable = [

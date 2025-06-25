@@ -7,6 +7,7 @@ use App\Models\Comentario;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use App\Models\HistorialBusqueda;
 
 class ProductoController extends Controller
 {
@@ -41,9 +42,42 @@ class ProductoController extends Controller
     }
 
     public function filtrar(Request $request)
+
     {
         $query = Product::query();
 
+        $usuarioId = $request->input('usuario_id');
+
+        $sinFiltros = !$request->filled('Nombre') && !$request->filled('Categoria_idCategoria') &&
+            !$request->filled('PrecioMin') && !$request->filled('PrecioMax');
+
+        if ($sinFiltros && $usuarioId) {
+            $historial = HistorialBusqueda::where('usuario_id', $usuarioId)
+                ->orderBy('fecha', 'desc')
+                ->take(10)
+                ->get();
+
+            // Recolectar términos y categorías más comunes
+            $categorias = $historial->pluck('categoria_id')->filter()->unique()->toArray();
+            $terminos = $historial->pluck('termino_busqueda')->unique()->toArray();
+
+            if (!empty($categorias)) {
+                $query->whereIn('Categoria_idCategoria', $categorias);
+            }
+
+            if (!empty($terminos)) {
+                $query->where(function ($q) use ($terminos) {
+                    foreach ($terminos as $t) {
+                        $q->orWhere('Nombre', 'like', '%' . $t . '%');
+                    }
+                });
+            }
+
+            // Mostrar en orden aleatorio
+            $query->inRandomOrder();
+        }
+
+        // Filtros tradicionales
         if ($request->filled('Nombre')) {
             $query->where('Nombre', 'like', '%' . $request->Nombre . '%');
         }
@@ -66,6 +100,36 @@ class ProductoController extends Controller
 
         return response()->json($productos, 200, [], JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_IGNORE);
     }
+
+    /**
+     * Display a listing of the resource.
+     */
+    // public function filtrar(Request $request)
+    // {
+    //     $query = Product::query();
+
+    //     if ($request->filled('Nombre')) {
+    //         $query->where('Nombre', 'like', '%' . $request->Nombre . '%');
+    //     }
+
+    //     if ($request->filled('Categoria_idCategoria')) {
+    //         $query->where('Categoria_idCategoria', $request->Categoria_idCategoria);
+    //     }
+
+    //     if ($request->filled('PrecioMin') && $request->filled('PrecioMax')) {
+    //         $query->whereBetween('Precio', [$request->PrecioMin, $request->PrecioMax]);
+    //     }
+
+    //     $productos = $query->get();
+
+    //     foreach ($productos as $producto) {
+    //         if ($producto->Imagen) {
+    //             $producto->Imagen = base64_encode($producto->Imagen);
+    //         }
+    //     }
+
+    //     return response()->json($productos, 200, [], JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_IGNORE);
+    // }
 
 
 
@@ -123,7 +187,9 @@ class ProductoController extends Controller
         return response()->json($producto, 200, [], JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_IGNORE);
     }
 
-
+    /*
+        D
+        */
 
 
     public function porCategoria($id)
@@ -189,7 +255,7 @@ class ProductoController extends Controller
             return response()->json([
                 "message" => "Producto eliminado con éxito"
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json([
                 "message" => "Error al eliminar el producto",
                 "error" => $e->getMessage()
