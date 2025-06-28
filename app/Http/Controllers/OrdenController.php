@@ -59,7 +59,8 @@ class OrdenController extends Controller
         try {
             $orden = Orden::with([
                 'ordendetalles.product',
-                'datosenvio'
+                'datosenvio',
+                'metodospago'
             ])
                 ->where('idOrden', $idOrden)
                 ->whereHas('datosenvio', function ($query) use ($idUsuario) {

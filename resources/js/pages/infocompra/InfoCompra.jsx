@@ -1,6 +1,13 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import {
+    Package,
+    ShoppingCart,
+    CalendarDays,
+    DollarSign,
+    CreditCard,
+} from "lucide-react";
 
 const InfoCompra = () => {
     const idUsuario = localStorage.getItem("idUsuarios");
@@ -27,19 +34,23 @@ const InfoCompra = () => {
             </p>
         );
 
-    const { datosenvio, ordendetalles, Fecha, Total } = detalles;
+    const { datosenvio, ordendetalles, Fecha, Total, metodospago } = detalles;
 
     return (
-        <div className="max-w-5xl mx-auto p-6 mt-10 bg-white rounded-2xl shadow-lg space-y-8">
+        <div className="max-w-5xl mx-auto p-6 mt-5 bg-white rounded-2xl shadow-lg space-y-8">
+            {/* Título principal */}
             <h1 className="text-3xl font-bold text-gray-800 text-center">
                 Resumen de Compra
             </h1>
 
             {/* Información de envío */}
             <section>
-                <h2 className="text-xl font-semibold text-yellow-600 mb-4 border-b pb-2">
-                    📦 Información de Envío
-                </h2>
+                <div className="flex items-center gap-2 mb-4 border-b pb-2">
+                    <Package className="text-yellow-600 w-5 h-5" />
+                    <h2 className="text-xl font-semibold text-yellow-600">
+                        Información de Envío
+                    </h2>
+                </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700 text-sm">
                     <p>
                         <strong>Dirección:</strong> {datosenvio?.Direccion}
@@ -61,11 +72,28 @@ const InfoCompra = () => {
                 </div>
             </section>
 
+            {/* Método de pago */}
+            <section>
+                <div className="flex items-center gap-2 mb-4 border-b pb-2">
+                    <CreditCard className="text-yellow-600 w-5 h-5" />
+                    <h2 className="text-xl font-semibold text-yellow-600">
+                        Método de Pago
+                    </h2>
+                </div>
+                <p className="text-gray-700 text-sm">
+                    <strong>Método:</strong>{" "}
+                    {metodospago?.Description || "Desconocido"}
+                </p>
+            </section>
+
             {/* Productos comprados */}
             <section>
-                <h2 className="text-xl font-semibold text-yellow-600 mb-4 border-b pb-2">
-                    🛒 Productos Comprados
-                </h2>
+                <div className="flex items-center gap-2 mb-4 border-b pb-2">
+                    <ShoppingCart className="text-yellow-600 w-5 h-5" />
+                    <h2 className="text-xl font-semibold text-yellow-600">
+                        Productos Comprados
+                    </h2>
+                </div>
                 <div className="space-y-4">
                     {ordendetalles.map((detalle, index) => (
                         <div
@@ -97,17 +125,27 @@ const InfoCompra = () => {
                 </div>
             </section>
 
-            {/* Total y Fecha */}
-            <section className="flex flex-col md:flex-row justify-between items-center border-t pt-6">
-                <p className="text-sm text-gray-600 mb-2 md:mb-0">
-                    📅 Fecha de compra:{" "}
-                    <span className="font-medium">
+            {/* Fecha y total */}
+            <section className="flex flex-col md:flex-row justify-between items-center border-t pt-6 gap-4">
+                <p className="text-sm text-gray-600 flex items-center gap-2">
+                    <CalendarDays className="w-4 h-4 text-blue-500" />
+                    Fecha de compra:
+                    <span className="font-medium ml-1">
                         {new Date(Fecha).toLocaleDateString()}
                     </span>
                 </p>
-                <p className="text-2xl font-bold text-green-600">
-                    Total pagado: ${Total.toFixed(2)}
-                </p>
+                <div className="flex flex-col md:flex-row items-center gap-4">
+                    <p className="text-2xl font-bold text-green-600 flex items-center gap-2">
+                        <DollarSign className="w-5 h-5" />
+                        Total pagado: ${Total.toFixed(2)}
+                    </p>
+                    <button
+                        // onClick={handleDescargarFactura}
+                        className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold px-4 py-2 rounded-md shadow transition"
+                    >
+                        Descargar Factura
+                    </button>
+                </div>
             </section>
         </div>
     );

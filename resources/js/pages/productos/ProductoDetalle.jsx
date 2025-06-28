@@ -8,10 +8,13 @@ import Modal from "../../components/Modal";
 import ProductoFormEditar from "../productos/ProductoFormEditar";
 import Loader from "../../components/Loader";
 import { motion } from "framer-motion";
+import ProductoCard from "../../components/ProductosCard";
 
 const ProductoDetalle = () => {
     const { id } = useParams();
+
     const [producto, setProducto] = useState("");
+    const [productoCategoria, setProductoCategoria] = useState([]);
     const [comentario, setComentario] = useState("");
     const [openReplyId, setOpenReplyId] = useState(null);
     const [respuestas, setRespuestas] = useState({});
@@ -26,18 +29,41 @@ const ProductoDetalle = () => {
     const role = localStorage.getItem("role");
     const idUsuario = localStorage.getItem("idUsuarios");
 
-    useEffect(() => {
+    const ShowProduct = (id) => {
         setLoading(true);
         axios
             .get(`http://127.0.0.1:8000/api/productos/${id}`)
             .then((response) => {
-                setProducto(response.data);
-                console.log("Producto obtenido:", response.data);
+                const productoObtenido = response.data;
+                setProducto(productoObtenido);
+                console.log("Producto obtenido:", productoObtenido);
                 setLoading(false);
+
+                if (productoObtenido.Categoria_idCategoria) {
+                    ProductRelation(
+                        productoObtenido.Categoria_idCategoria,
+                        productoObtenido.idProductos
+                    );
+                }
             })
             .catch((error) =>
                 console.error("Error al obtener el producto:", error)
             );
+    };
+
+    const ProductRelation = (idCategoria, idProductoActual) => {
+        axios
+            .get(
+                `http://127.0.0.1:8000/api/producto-categoria/${idCategoria}?excluir=${idProductoActual}`
+            )
+            .then((res) => {
+                setProductoCategoria(res.data);
+            })
+            .catch((err) => console.error("Error ", err));
+    };
+
+    useEffect(() => {
+        ShowProduct(id);
     }, [id]);
 
     const imagenSrc = producto.Imagen
@@ -322,6 +348,21 @@ const ProductoDetalle = () => {
                                     )}
                                 </div>
                             </div>
+                        </div>
+                    </div>
+
+                    {/* Productos Relacionados */}
+                    <div className="max-w-6xl mx-auto mt-12">
+                        <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                            Productos Relacionados
+                        </h2>
+                        <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                            {productoCategoria.map((producto) => (
+                                <ProductoCard
+                                    key={producto.idProductos}
+                                    producto={producto}
+                                />
+                            ))}
                         </div>
                     </div>
 

@@ -20,6 +20,8 @@ use App\Http\Controllers\OrdenDetalleController;
 use App\Http\Controllers\GoogleAuthController;
 use App\Http\Controllers\MercadoPagoController;
 use App\Http\Controllers\HistorialBusquedaController;
+use App\Models\Product;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -75,6 +77,7 @@ Route::middleware(['auth:sanctum', 'check.token.expiry'])->group(function () {
     Route::post('/ordendetalle', [OrdenDetalleController::class, 'store']);
     Route::get('/ordenes/usuario/{idUsuario}', [OrdenController::class, 'OrdenPorUsuario']);
     Route::get('/informacion-compra/{idUsuario}/{idOrden}', [OrdenController::class, 'InformacionCompra']);
+
     // Comentarios
     Route::post('/comentarios', [ComentarioController::class, 'store']);
     // Historial de busqueda
@@ -83,3 +86,4 @@ Route::middleware(['auth:sanctum', 'check.token.expiry'])->group(function () {
 });
 // Integracion API mercadopago
 // Route::post('/webhooks/mercadopago', [MercadoPagoController::class, 'webhook']);
+Route::get('/producto-categoria/{idCategoria}', [ProductoController::class, 'porCategoria']);

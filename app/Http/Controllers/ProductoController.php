@@ -186,15 +186,18 @@ class ProductoController extends Controller
 
         return response()->json($producto, 200, [], JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_IGNORE);
     }
-
-    /*
-        D
-        */
-
-
-    public function porCategoria($id)
+    public function porCategoria($idCategoria, Request $request)
     {
-        $productos = Product::where('Categoria_idCategoria', $id)->get();
+        $excluirId = $request->query('excluir'); // ?excluir=ID
+
+        $productos = Product::where('Categoria_idCategoria', $idCategoria)
+            ->when($excluirId, function ($query, $excluirId) {
+                return $query->where('idProductos', '!=', $excluirId);
+            })
+            ->inRandomOrder()
+            ->take(4)
+            ->get();
+
         foreach ($productos as $producto) {
             if ($producto->Imagen) {
                 $producto->Imagen = base64_encode($producto->Imagen);
@@ -242,7 +245,6 @@ class ProductoController extends Controller
 
         return response()->json(['message' => 'Producto actualizado correctamente']);
     }
-
 
     /**
      * Remove the specified resource from storage.
