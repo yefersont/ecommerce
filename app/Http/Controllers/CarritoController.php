@@ -30,8 +30,8 @@ class CarritoController extends Controller
                 'Usuarios_idUsuarios' => 'required|integer'
             ]);
 
-            $producto = Product::findOrFail($request->Productos_idProducts);
 
+            $producto = Product::findOrFail($request->Productos_idProducts);
             $carrito = Carrito::where('Productos_idProducts', $request->Productos_idProducts)
                 ->where('Usuarios_idUsuarios', $request->Usuarios_idUsuarios)
                 ->first();
@@ -39,7 +39,6 @@ class CarritoController extends Controller
             $cantidadExistente = $carrito ? $carrito->Cantidad : 0;
             $cantidadTotal = $cantidadExistente + $request->Cantidad;
 
-            // Verificar que no exceda el stock
             if ($cantidadTotal > $producto->Stock) {
                 return response()->json([
                     "Mensaje" => "No puedes agregar más productos de los que hay en stock. Stock disponible: {$producto->Stock}"

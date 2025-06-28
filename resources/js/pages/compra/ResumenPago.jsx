@@ -148,13 +148,14 @@ const ResumenPago = () => {
                 <Loader />
             ) : (
                 <>
-                    <h2 className="text-3xl font-bold text-center mb-8 text-gray-800">
+                    <h2 className="text-3xl font-bold text-center mb-10 text-gray-800">
                         Confirmación de Compra
                     </h2>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        {/* Columna izquierda */}
-                        <div className="bg-transparent rounded-2xl   p-6 space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                        {/* Columna izquierda - Datos de envío y tarjeta */}
+                        <div className="bg-white p-6 rounded-2xl shadow-md space-y-8">
+                            {/* Datos de Envío */}
                             <div>
                                 <h3 className="text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
                                     <MapPin className="w-5 h-5 text-gray-600" />
@@ -178,7 +179,7 @@ const ResumenPago = () => {
                                             </div>
                                             <div>
                                                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                                                    Identificacion
+                                                    Identificación
                                                 </label>
                                                 <input
                                                     type="text"
@@ -251,12 +252,12 @@ const ResumenPago = () => {
                                 )}
                             </div>
 
+                            {/* Tarjeta seleccionada */}
                             <div>
                                 <h3 className="text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
                                     <CreditCard className="w-5 h-5 text-gray-600" />
                                     Tarjeta Seleccionada
                                 </h3>
-
                                 {tarjetaSeleccionadaContext ? (
                                     <div className="space-y-4">
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -266,7 +267,7 @@ const ResumenPago = () => {
                                                 </label>
                                                 <input
                                                     type="text"
-                                                    value="Crédito" // puedes cambiar esto si tienes más info
+                                                    value="Crédito"
                                                     disabled
                                                     className="w-full bg-gray-100 border border-gray-300 text-gray-700 text-sm rounded-md px-4 py-2"
                                                 />
@@ -277,7 +278,7 @@ const ResumenPago = () => {
                                                 </label>
                                                 <input
                                                     type="text"
-                                                    value="**** **** **** 1234" // aquí deberías mostrar el valor real con máscara
+                                                    value="**** **** **** 1234"
                                                     disabled
                                                     className="w-full bg-gray-100 border border-gray-300 text-gray-700 text-sm rounded-md px-4 py-2"
                                                 />
@@ -292,9 +293,9 @@ const ResumenPago = () => {
                             </div>
                         </div>
 
-                        {/* Columna derecha */}
-                        <div className="bg-transparent rounded-2xl  p-6 flex flex-col max-h-[550px]">
-                            <h3 className="text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                        {/* Columna derecha - Productos y resumen */}
+                        <div className="bg-white p-6 rounded-2xl shadow-md flex flex-col max-h-[600px]">
+                            <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
                                 <ShoppingBasket className="w-5 h-5 text-gray-600" />
                                 Productos en el Carrito
                             </h3>
@@ -343,7 +344,7 @@ const ResumenPago = () => {
 
                                         <div className="flex justify-between gap-4">
                                             <button
-                                                className=" flex-1 bg-[#232f3e] hover:bg-[#3b4f68] text-yellow-400 font-bold py-2 px-2 rounded shadow w-full"
+                                                className="flex-1 bg-[#232f3e] hover:bg-[#3b4f68] text-yellow-400 font-bold py-2 px-2 rounded shadow"
                                                 onClick={() => {
                                                     alert("Proceso cancelado");
                                                     navigate("/productos");
@@ -354,7 +355,7 @@ const ResumenPago = () => {
                                             <button
                                                 type="button"
                                                 onClick={onSubmit}
-                                                className=" flex-1 bg-yellow-300 hover:bg-yellow-200 text-black font-bold py-2 px-2 rounded shadow w-full"
+                                                className="flex-1 bg-yellow-300 hover:bg-yellow-200 text-black font-bold py-2 px-2 rounded shadow"
                                             >
                                                 Continuar
                                             </button>

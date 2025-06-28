@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Ordendetalle;
 use Illuminate\Http\Request;
+use App\Models\Product;
 use Exception;
 use Illuminate\Support\Facades\Validator;
 
@@ -21,21 +22,18 @@ class OrdenDetalleController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+
     public function store(Request $request)
     {
         try {
-
-
-
             $detalles = is_array($request->all()) ? $request->all() : [$request->all()];
-
 
             foreach ($detalles as $detalle) {
                 // Validar cada detalle
                 $validator = Validator::make($detalle, [
                     'Orden_id' => 'required|numeric',
                     'Producto_id' => 'required|numeric',
-                    'Cantidad' => 'required|numeric',
+                    'Cantidad' => 'required|numeric|min:1',
                     'PrecioUnitario' => 'required|numeric'
                 ]);
 
@@ -46,6 +44,20 @@ class OrdenDetalleController extends Controller
                     ], 422);
                 }
 
+                // Verificar que haya stock suficiente
+                $producto = Product::find($detalle['Producto_id']);
+                if (!$producto) {
+                    return response()->json([
+                        'message' => 'Producto no encontrado',
+                    ], 404);
+                }
+
+                if ($producto->Stock < $detalle['Cantidad']) {
+                    return response()->json([
+                        'message' => "Stock insuficiente para el producto '{$producto->Nombre}'. Stock disponible: {$producto->Stock}",
+                    ], 400);
+                }
+
                 // Crear el detalle
                 $ordenDetalle = new Ordendetalle();
                 $ordenDetalle->Orden_id = $detalle['Orden_id'];
@@ -53,10 +65,14 @@ class OrdenDetalleController extends Controller
                 $ordenDetalle->Cantidad = $detalle['Cantidad'];
                 $ordenDetalle->PrecioUnitario = $detalle['PrecioUnitario'];
                 $ordenDetalle->save();
+
+                // Descontar el stock
+                $producto->Stock -= $detalle['Cantidad'];
+                $producto->save();
             }
 
             return response()->json([
-                "message" => "Se insertaron los detalles correctamente"
+                "message" => "Se insertaron los detalles correctamente y se actualizó el stock"
             ], 201);
         } catch (Exception $e) {
             return response()->json([

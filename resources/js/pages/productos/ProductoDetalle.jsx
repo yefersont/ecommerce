@@ -130,7 +130,7 @@ const ProductoDetalle = () => {
             })
             .catch(() => {
                 Swal.fire({
-                    title: "Error al agregar al Carrito!",
+                    title: "No hay stock de este producto por el momento!",
                     icon: "warning",
                     confirmButtonText: "Aceptar",
                 });
@@ -307,12 +307,45 @@ const ProductoDetalle = () => {
                                         </button>
                                     </div>
                                 </div>
+                                {producto.Stock === 0 && (
+                                    <div className="flex items-center gap-3 p-4 bg-red-100 border border-red-300 text-red-800 rounded-xl shadow-sm mt-4">
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            className="w-5 h-5 flex-shrink-0"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth={2}
+                                                d="M12 8v4m0 4h.01M12 2a10 10 0 11-10 10A10 10 0 0112 2z"
+                                            />
+                                        </svg>
+                                        <span className="text-sm font-medium">
+                                            Este producto no está disponible por
+                                            el momento. Sin stock.
+                                        </span>
+                                    </div>
+                                )}
 
                                 {/* Botones acción */}
                                 <div className="grid sm:grid-cols-2 gap-3">
                                     <button
-                                        className="py-2 bg-yellow-400 hover:bg-yellow-500 text-black flex items-center justify-center gap-2 rounded"
+                                        className={`py-2 flex items-center justify-center gap-2 rounded transition-colors duration-200 ${
+                                            producto.Stock === 0
+                                                ? "bg-yellow-300 text-black opacity-60"
+                                                : "bg-yellow-400 hover:bg-yellow-500 text-black"
+                                        }`}
                                         onClick={addToCart}
+                                        disabled={producto.Stock === 0}
+                                        style={{
+                                            pointerEvents:
+                                                producto.Stock === 0
+                                                    ? "none"
+                                                    : "auto", // evitar el cursor emoji sin usar cursor-not-allowed
+                                        }}
                                     >
                                         <ShoppingCart size={20} />
                                         Agregar al Carrito
