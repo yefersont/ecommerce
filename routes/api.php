@@ -20,6 +20,8 @@ use App\Http\Controllers\OrdenDetalleController;
 use App\Http\Controllers\GoogleAuthController;
 use App\Http\Controllers\MercadoPagoController;
 use App\Http\Controllers\HistorialBusquedaController;
+use App\Http\Controllers\FacturasController;
+
 use App\Models\Product;
 
 /*
@@ -75,7 +77,6 @@ Route::middleware(['auth:sanctum', 'check.token.expiry'])->group(function () {
     Route::post('/datosenvio', [DatosenvioController::class, 'store']);
     // Orden de compra
     Route::post('/ordendetalle', [OrdenDetalleController::class, 'store']);
-    Route::get('/ordenes/usuario/{idUsuario}', [OrdenController::class, 'OrdenPorUsuario']);
     Route::get('/informacion-compra/{idUsuario}/{idOrden}', [OrdenController::class, 'InformacionCompra']);
 
     // Comentarios
@@ -83,7 +84,14 @@ Route::middleware(['auth:sanctum', 'check.token.expiry'])->group(function () {
     // Historial de busqueda
     Route::post('/historial-busqueda', [HistorialBusquedaController::class, 'store']);
     Route::get('/historial-busqueda/{usuario_id}', [HistorialBusquedaController::class, 'index']);
+    Route::get('/producto-categoria/{idCategoria}', [ProductoController::class, 'porCategoria']);
+    Route::get('/ordenes/usuario/{idUsuario}', [OrdenController::class, 'OrdenPorUsuario']);
+
+
+
+
+    // Facturas
+    Route::post('/generar-factura', [FacturasController::class, 'generarFactura']);
 });
 // Integracion API mercadopago
 // Route::post('/webhooks/mercadopago', [MercadoPagoController::class, 'webhook']);
-Route::get('/producto-categoria/{idCategoria}', [ProductoController::class, 'porCategoria']);

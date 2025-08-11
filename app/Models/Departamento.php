@@ -38,7 +38,7 @@ class Departamento extends Model
 
 	public function ciudades()
 	{
-		return $this->hasMany(Ciudade::class);
+		return $this->hasMany(Ciudade::class, 'Ciudades_idCiudades');
 	}
 
 	public function datosenvios()

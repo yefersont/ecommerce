@@ -22,14 +22,13 @@ class OrdenDetalleController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-
     public function store(Request $request)
     {
         try {
             $detalles = is_array($request->all()) ? $request->all() : [$request->all()];
 
             foreach ($detalles as $detalle) {
-                // Validar cada detalle
+                // Validar
                 $validator = Validator::make($detalle, [
                     'Orden_id' => 'required|numeric',
                     'Producto_id' => 'required|numeric',
@@ -44,8 +43,11 @@ class OrdenDetalleController extends Controller
                     ], 422);
                 }
 
-                // Verificar que haya stock suficiente
-                $producto = Product::find($detalle['Producto_id']);
+                // Obtener producto actual solo con lo necesario
+                $producto = Product::select('idProductos', 'Stock', 'Nombre')
+                    ->where('idProductos', $detalle['Producto_id'])
+                    ->first();
+
                 if (!$producto) {
                     return response()->json([
                         'message' => 'Producto no encontrado',
@@ -58,17 +60,17 @@ class OrdenDetalleController extends Controller
                     ], 400);
                 }
 
-                // Crear el detalle
-                $ordenDetalle = new Ordendetalle();
-                $ordenDetalle->Orden_id = $detalle['Orden_id'];
-                $ordenDetalle->Producto_id = $detalle['Producto_id'];
-                $ordenDetalle->Cantidad = $detalle['Cantidad'];
-                $ordenDetalle->PrecioUnitario = $detalle['PrecioUnitario'];
-                $ordenDetalle->save();
+                // Guardar el detalle
+                Ordendetalle::create([
+                    'Orden_id' => $detalle['Orden_id'],
+                    'Producto_id' => $detalle['Producto_id'],
+                    'Cantidad' => $detalle['Cantidad'],
+                    'PrecioUnitario' => $detalle['PrecioUnitario'],
+                ]);
 
-                // Descontar el stock
-                $producto->Stock -= $detalle['Cantidad'];
-                $producto->save();
+                // Descontar el stock sin afectar la imagen ni otros campos
+                Product::where('idProductos', $detalle['Producto_id'])
+                    ->decrement('Stock', $detalle['Cantidad']);
             }
 
             return response()->json([

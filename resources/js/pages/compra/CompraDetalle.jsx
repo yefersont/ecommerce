@@ -66,113 +66,111 @@ const CompraDetalle = () => {
         navigate("/seleccionar-tarjeta");
     };
 
-    return (
-        <div>
-            {loading ? (
-                <Loader />
-            ) : (
-                <div className="bg-gray-100 py-6">
-                    <div className="max-w-6xl mx-auto flex flex-col lg:flex-row gap-4 px-4 lg:px-0 mt-[32px]">
-                        {/* Productos */}
-                        <div className="lg:w-2/3 w-full bg-transparent p-4 rounded shadow-none">
-                            <h2 className="text-xl font-bold mb-4">
-                                Detalles de la Compra
-                            </h2>
+    return loading ? (
+        <Loader />
+    ) : (
+        <div className="py-12">
+            {" "}
+            {/* Aumenté el padding superior */}
+            <div className="max-w-6xl mx-auto flex flex-col lg:flex-row gap-6 px-4">
+                {/* Productos */}
+                <div className="lg:w-2/3 w-full bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                    <h2 className="text-2xl font-semibold mb-6 text-gray-800">
+                        Detalles de la Compra
+                    </h2>
 
-                            <div className="max-h-[65vh] overflow-y-auto pr-2">
-                                <ul className="divide-y divide-gray-200">
-                                    {detalle.map((item) => (
-                                        <li
-                                            key={item.idCarrito}
-                                            className="py-4 flex items-center gap-4"
-                                        >
-                                            <img
-                                                src={`data:image/jpeg;base64,${item.product.Imagen}`}
-                                                alt={item.product.Nombre}
-                                                className="w-16 h-16 object-cover rounded shadow"
-                                            />
-                                            <div className="flex-1">
-                                                <p className="font-medium text-gray-800">
-                                                    {item.product.Nombre}
-                                                </p>
-                                                <p className="text-sm text-gray-500">
-                                                    {item.Cantidad} x $
-                                                    {item.product.Precio.toLocaleString()}
-                                                </p>
-                                            </div>
-                                            <div className="text-right font-bold text-gray-700">
-                                                $
-                                                {(
-                                                    item.product.Precio *
-                                                    item.Cantidad
-                                                ).toLocaleString()}
-                                            </div>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                        </div>
-                        {/* Línea divisoria */}
-                        <div className="hidden lg:block w-px bg-gray-300 mx-2"></div>
-
-                        {/* Panel derecho */}
-                        <div className="lg:w-1/3 w-full bg-transparent p-6 rounded shadow-none flex flex-col items-center justify-center gap-6">
-                            <RadioGroup
-                                value={metodoPago}
-                                onChange={setMetodoPago}
-                                className="w-full"
-                            >
-                                <RadioGroup.Label className="text-lg font-semibold mb-4 text-center w-full">
-                                    Selecciona un método de pago
-                                </RadioGroup.Label>
-                                <div className="space-y-3 w-full">
-                                    {metodosPago.map((method) => (
-                                        <RadioGroup.Option
-                                            key={
-                                                method.idMetodosPago ??
-                                                method.Description
-                                            }
-                                            value={method.idMetodosPago}
-                                            className={({ active, checked }) =>
-                                                `block cursor-pointer rounded-lg px-4 py-2 border select-none text-center w-full ${
-                                                    checked
-                                                        ? "bg-yellow-300 border-yellow-400 text-black font-semibold"
-                                                        : "bg-white border-gray-300 text-gray-700"
-                                                } ${
-                                                    active
-                                                        ? "ring-2 ring-yellow-400 ring-offset-2"
-                                                        : ""
-                                                }`
-                                            }
-                                        >
-                                            {method.Description}
-                                        </RadioGroup.Option>
-                                    ))}
-                                </div>
-                            </RadioGroup>
-
-                            <div className="text-xl font-semibold text-center w-full">
-                                Total a Pagar: ${total.toLocaleString()}
-                            </div>
-
-                            <div className="flex flex-col gap-2 w-full">
-                                <button
-                                    onClick={onSubmit}
-                                    className="bg-yellow-300 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded shadow w-full"
+                    <div className="max-h-[65vh] overflow-y-auto pr-2">
+                        <ul className="divide-y divide-gray-200">
+                            {detalle.map((item) => (
+                                <li
+                                    key={item.idCarrito}
+                                    className="py-4 flex items-center gap-4 hover:bg-gray-50 rounded-md transition"
                                 >
-                                    Continuar →
-                                </button>
-                                <button
-                                    className="w-full py-2 bg-[#232f3e] text-yellow-400 rounded hover:bg-[#3b4f68]"
-                                    onClick={() => navigate("/productos")}
-                                >
-                                    Cancelar
-                                </button>
-                            </div>
-                        </div>
+                                    <img
+                                        src={`data:image/jpeg;base64,${item.product.Imagen}`}
+                                        alt={item.product.Nombre}
+                                        className="w-16 h-16 object-cover rounded border border-gray-200"
+                                    />
+                                    <div className="flex-1">
+                                        <p className="font-medium text-gray-800">
+                                            {item.product.Nombre}
+                                        </p>
+                                        <p className="text-sm text-gray-500">
+                                            {item.Cantidad} × $
+                                            {item.product.Precio.toLocaleString()}
+                                        </p>
+                                    </div>
+                                    <div className="text-right font-semibold text-gray-900">
+                                        $
+                                        {(
+                                            item.product.Precio * item.Cantidad
+                                        ).toLocaleString()}
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
                     </div>
                 </div>
-            )}
+
+                {/* Línea divisoria */}
+                <div className="hidden lg:block w-px bg-gray-200"></div>
+
+                {/* Panel derecho */}
+                <div className="lg:w-1/3 w-full bg-white p-6 rounded-lg shadow-sm border border-gray-200 flex flex-col gap-6">
+                    <RadioGroup
+                        value={metodoPago}
+                        onChange={setMetodoPago}
+                        className="w-full"
+                    >
+                        <RadioGroup.Label className="text-lg font-medium mb-4 text-gray-800">
+                            Selecciona un método de pago
+                        </RadioGroup.Label>
+                        <div className="space-y-3">
+                            {metodosPago.map((method) => (
+                                <RadioGroup.Option
+                                    key={
+                                        method.idMetodosPago ??
+                                        method.Description
+                                    }
+                                    value={method.idMetodosPago}
+                                    className={({ active, checked }) =>
+                                        `block cursor-pointer rounded-md px-4 py-3 border text-center text-sm font-medium transition ${
+                                            checked
+                                                ? "bg-yellow-300 border-yellow-400 text-black"
+                                                : "bg-gray-50 border-gray-300 text-gray-700 hover:bg-gray-100"
+                                        } ${
+                                            active
+                                                ? "ring-2 ring-yellow-400 ring-offset-2"
+                                                : ""
+                                        }`
+                                    }
+                                >
+                                    {method.Description}
+                                </RadioGroup.Option>
+                            ))}
+                        </div>
+                    </RadioGroup>
+
+                    <div className="text-lg font-semibold text-gray-900 text-center">
+                        Total a Pagar: ${total.toLocaleString()}
+                    </div>
+
+                    <div className="flex flex-col gap-3">
+                        <button
+                            onClick={onSubmit}
+                            className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold py-3 rounded-md shadow-sm transition"
+                        >
+                            Continuar →
+                        </button>
+                        <button
+                            className="py-3 bg-[#232f3e] text-yellow-400 rounded-md hover:bg-[#3b4f68] transition"
+                            onClick={() => navigate("/productos")}
+                        >
+                            Cancelar
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 };

@@ -40,7 +40,7 @@ class OrdenController extends Controller
             foreach ($ordenes as $orden) {
                 foreach ($orden->ordendetalles as $detalle) {
                     $detalle->subtotal = $detalle->Cantidad * $detalle->PrecioUnitario;
-                    if (!empty($detalle->product->Imagen)) {
+                    if (!empty($detalle->product->Imagen) && !str_starts_with($detalle->product->Imagen, '/9j/')) {
                         $detalle->product->Imagen = base64_encode($detalle->product->Imagen);
                     }
                 }
@@ -59,7 +59,9 @@ class OrdenController extends Controller
         try {
             $orden = Orden::with([
                 'ordendetalles.product',
-                'datosenvio',
+                'datosenvio.ciudade', // Trae ciudad y departamento
+                'datosenvio.departamento', // Trae ciudad y departamento
+                'datosenvio.usuario',
                 'metodospago'
             ])
                 ->where('idOrden', $idOrden)
