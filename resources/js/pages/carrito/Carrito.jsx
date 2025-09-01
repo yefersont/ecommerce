@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { Users, X } from "lucide-react";
+import { X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Loader from "../../components/Loader";
-import { motion } from "framer-motion";
 
 const Carrito = ({ onClose }) => {
     const [carrito, setCarrito] = useState([]);

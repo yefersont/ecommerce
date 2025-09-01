@@ -8,7 +8,6 @@ export const CompraProvider = ({ children }) => {
     const [tarjetaSeleccionadaContext, setTarjetaSeleccionadaContext] =
         useState(null);
 
-    // 🎯 NUEVOS estados para los filtros de productos
     const [busqueda, setBusqueda] = useState("");
     const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("");
     const [precioSeleccionado, setPrecioSeleccionado] = useState("");

@@ -12,7 +12,6 @@ import ProductoCard from "../../components/ProductosCard";
 
 const ProductoDetalle = () => {
     const { id } = useParams();
-
     const [producto, setProducto] = useState("");
     const [productoCategoria, setProductoCategoria] = useState([]);
     const [comentario, setComentario] = useState("");
@@ -61,10 +60,6 @@ const ProductoDetalle = () => {
             })
             .catch((err) => console.error("Error ", err));
     };
-
-    useEffect(() => {
-        ShowProduct(id);
-    }, [id]);
 
     const imagenSrc = producto.Imagen
         ? `data:image/jpeg;base64,${producto.Imagen}`
@@ -198,6 +193,14 @@ const ProductoDetalle = () => {
                 Swal.fire("Error", "No se pudo enviar el comentario.", "error");
             });
     };
+
+    const comprar = (id) => {
+        navigate("/formulario-envio");
+    };
+
+    useEffect(() => {
+        ShowProduct(id);
+    }, [id]);
 
     return (
         <div>
@@ -344,18 +347,28 @@ const ProductoDetalle = () => {
                                             pointerEvents:
                                                 producto.Stock === 0
                                                     ? "none"
-                                                    : "auto", // evitar el cursor emoji sin usar cursor-not-allowed
+                                                    : "auto",
                                         }}
                                     >
-                                        <ShoppingCart size={20} />
                                         Agregar al Carrito
                                     </button>
 
                                     <button
-                                        className="py-2 bg-[#3b4f68] text-yellow-400 hover:bg-[#232f3e] rounded"
-                                        onClick={() => navigate("/productos")}
+                                        className={`py-2 rounded transition-colors duration-200 ${
+                                            producto.Stock === 0
+                                                ? "bg-[#3b4f68] text-yellow-400 opacity-60"
+                                                : "bg-[#3b4f68] text-yellow-400 hover:bg-[#232f3e]"
+                                        }`}
+                                        onClick={comprar}
+                                        disabled={producto.Stock === 0}
+                                        style={{
+                                            pointerEvents:
+                                                producto.Stock === 0
+                                                    ? "none"
+                                                    : "auto",
+                                        }}
                                     >
-                                        Volver
+                                        ¡Comprar ahora!
                                     </button>
 
                                     {role === "1" && (

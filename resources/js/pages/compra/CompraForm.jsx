@@ -20,19 +20,16 @@ const CompraEnvio = () => {
     const departamentoSeleccionado = watch("departamento");
     const { datosEnvio, setDatosEnvio } = useCompra();
 
-    // Para filtrar en tiempo real los caracteres inválidos en nombre
     const handleNombreInput = (e) => {
         const filtered = e.target.value.replace(/[^A-Za-zÁÉÍÓÚÑáéíóúñ\s]/g, "");
         setValue("nombreCompleto", filtered);
     };
 
-    // Para filtrar solo números en identificación
     const handleIdentificacionInput = (e) => {
         const filtered = e.target.value.replace(/\D/g, "");
         setValue("identificacion", filtered);
     };
 
-    // Para filtrar solo números en teléfono
     const handleTelefonoInput = (e) => {
         const filtered = e.target.value.replace(/\D/g, "");
         setValue("telefono", filtered);
@@ -71,6 +68,7 @@ const CompraEnvio = () => {
             setCiudades([]);
         }
     }, [departamentoSeleccionado]);
+
     useEffect(() => {
         if (datosEnvio) {
             Object.entries(datosEnvio).forEach(([key, value]) => {
@@ -92,22 +90,24 @@ const CompraEnvio = () => {
             ) : (
                 <form
                     onSubmit={handleSubmit(onSubmit)}
-                    className="w-full max-w-4xl mx-auto mt-5 bg-white bg-opacity-80 p-8 rounded-2xl shadow-none"
+                    className="w-full max-w-4xl mx-auto mt-6 bg-white/80 backdrop-blur-md p-8 rounded-2xl shadow-md border border-gray-100"
                 >
-                    <h2 className="text-2xl font-bold mb-6">
+                    {/* Encabezado */}
+                    <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center tracking-tight">
                         Información de Envío
                     </h2>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {/* Datos remitente */}
                         <div>
-                            <h3 className="text-lg font-semibold mb-3">
+                            <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-1">
                                 Datos del remitente
                             </h3>
 
-                            <div className="space-y-3">
+                            <div className="space-y-4">
                                 {/* Nombre */}
                                 <div>
-                                    <label className="block font-medium mb-1 text-sm">
+                                    <label className="block font-medium mb-1 text-sm text-gray-700">
                                         Nombre completo
                                     </label>
                                     <input
@@ -120,12 +120,12 @@ const CompraEnvio = () => {
                                                     "Solo se permiten letras",
                                             },
                                         })}
-                                        placeholder="Nombre completo"
-                                        className="w-full px-4 py-2 rounded-xl text-sm bg-white border border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                                        placeholder="Ej: Juan Pérez"
+                                        className="w-full px-3 py-2.5 rounded-lg text-sm bg-white border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
                                         onInput={handleNombreInput}
                                     />
                                     {errors.nombreCompleto && (
-                                        <p className="text-red-500 text-xs mt-0.5">
+                                        <p className="text-red-500 text-xs mt-1">
                                             {errors.nombreCompleto.message}
                                         </p>
                                     )}
@@ -133,7 +133,7 @@ const CompraEnvio = () => {
 
                                 {/* Identificación */}
                                 <div>
-                                    <label className="block font-medium mb-1 text-sm">
+                                    <label className="block font-medium mb-1 text-sm text-gray-700">
                                         Identificación
                                     </label>
                                     <input
@@ -147,11 +147,11 @@ const CompraEnvio = () => {
                                             },
                                         })}
                                         placeholder="Cédula o NIT"
-                                        className="w-full px-4 py-2 rounded-xl text-sm bg-white border border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                                        className="w-full px-3 py-2.5 rounded-lg text-sm bg-white border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
                                         onInput={handleIdentificacionInput}
                                     />
                                     {errors.identificacion && (
-                                        <p className="text-red-500 text-xs mt-0.5">
+                                        <p className="text-red-500 text-xs mt-1">
                                             {errors.identificacion.message}
                                         </p>
                                     )}
@@ -159,7 +159,7 @@ const CompraEnvio = () => {
 
                                 {/* Teléfono */}
                                 <div>
-                                    <label className="block font-medium mb-1 text-sm">
+                                    <label className="block font-medium mb-1 text-sm text-gray-700">
                                         Teléfono
                                     </label>
                                     <input
@@ -173,11 +173,11 @@ const CompraEnvio = () => {
                                             },
                                         })}
                                         placeholder="Número de teléfono"
-                                        className="w-full px-4 py-2 rounded-xl text-sm bg-white border border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                                        className="w-full px-3 py-2.5 rounded-lg text-sm bg-white border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
                                         onInput={handleTelefonoInput}
                                     />
                                     {errors.telefono && (
-                                        <p className="text-red-500 text-xs mt-0.5">
+                                        <p className="text-red-500 text-xs mt-1">
                                             {errors.telefono.message}
                                         </p>
                                     )}
@@ -185,7 +185,7 @@ const CompraEnvio = () => {
 
                                 {/* Correo */}
                                 <div>
-                                    <label className="block font-medium mb-1 text-sm">
+                                    <label className="block font-medium mb-1 text-sm text-gray-700">
                                         Correo electrónico
                                     </label>
                                     <input
@@ -198,11 +198,11 @@ const CompraEnvio = () => {
                                                     "Correo electrónico inválido",
                                             },
                                         })}
-                                        placeholder="Correo electrónico"
-                                        className="w-full px-4 py-2 rounded-xl text-sm bg-white border border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                                        placeholder="correo@ejemplo.com"
+                                        className="w-full px-3 py-2.5 rounded-lg text-sm bg-white border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
                                     />
                                     {errors.correo && (
-                                        <p className="text-red-500 text-xs mt-0.5">
+                                        <p className="text-red-500 text-xs mt-1">
                                             {errors.correo.message}
                                         </p>
                                     )}
@@ -210,59 +210,39 @@ const CompraEnvio = () => {
                             </div>
                         </div>
 
-                        {/* Dirección de envío */}
+                        {/* Dirección envío */}
                         <div>
-                            <h3 className="text-lg font-semibold mb-3">
+                            <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-1">
                                 Dirección de envío
                             </h3>
 
-                            <div className="space-y-3">
+                            <div className="space-y-4">
+                                {/* Departamento y Ciudad */}
                                 <div className="flex gap-4">
+                                    {/* Departamento */}
                                     <div className="flex-1">
-                                        <label className="block font-medium mb-1 text-sm text-gray-800">
+                                        <label className="block font-medium mb-1 text-sm text-gray-700">
                                             Departamento
                                         </label>
-                                        <div className="relative">
-                                            <select
-                                                {...register("departamento", {
-                                                    required:
-                                                        "Este campo es obligatorio",
-                                                })}
-                                                className="w-full appearance-none bg-white px-4 py-2 pr-10 rounded-xl text-sm border border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                                            >
-                                                <option value="">
-                                                    Selecciona un departamento
-                                                </option>
-                                                {departamentos.map((dep) => (
-                                                    <option
-                                                        key={
-                                                            dep.idDepartamentos
-                                                        }
-                                                        value={
-                                                            dep.idDepartamentos
-                                                        }
-                                                    >
-                                                        {dep.nombre}
-                                                    </option>
-                                                ))}
-                                            </select>
-
-                                            <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-yellow-400">
-                                                <svg
-                                                    className="w-5 h-5"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    viewBox="0 0 24 24"
+                                        <select
+                                            {...register("departamento", {
+                                                required:
+                                                    "Este campo es obligatorio",
+                                            })}
+                                            className="w-full px-3 py-2.5 rounded-lg text-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
+                                        >
+                                            <option value="">
+                                                Selecciona un departamento
+                                            </option>
+                                            {departamentos.map((dep) => (
+                                                <option
+                                                    key={dep.idDepartamentos}
+                                                    value={dep.idDepartamentos}
                                                 >
-                                                    <path
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                        strokeWidth={2}
-                                                        d="M19 9l-7 7-7-7"
-                                                    />
-                                                </svg>
-                                            </div>
-                                        </div>
+                                                    {dep.nombre}
+                                                </option>
+                                            ))}
+                                        </select>
                                         {errors.departamento && (
                                             <p className="text-red-500 text-xs mt-1">
                                                 {errors.departamento.message}
@@ -270,56 +250,37 @@ const CompraEnvio = () => {
                                         )}
                                     </div>
 
+                                    {/* Ciudad */}
                                     <div className="flex-1">
-                                        <label className="block font-medium mb-1 text-sm text-gray-800">
+                                        <label className="block font-medium mb-1 text-sm text-gray-700">
                                             Ciudad
                                         </label>
-                                        <div className="relative">
-                                            <select
-                                                {...register("ciudad", {
-                                                    required:
-                                                        "Este campo es obligatorio",
-                                                })}
-                                                disabled={ciudades.length === 0}
-                                                className={`w-full appearance-none bg-white px-4 py-2 pr-10 rounded-xl text-sm border ${
-                                                    ciudades.length === 0
-                                                        ? "border-gray-300 text-gray-400"
-                                                        : "border-yellow-400"
-                                                } focus:outline-none focus:ring-2 focus:ring-yellow-400`}
-                                            >
-                                                <option value="">
-                                                    {ciudades.length === 0
-                                                        ? "Primero selecciona un departamento"
-                                                        : "Selecciona una ciudad"}
-                                                </option>
-                                                {ciudades.map((ciudad) => (
-                                                    <option
-                                                        key={ciudad.idCiudades}
-                                                        value={
-                                                            ciudad.idCiudades
-                                                        }
-                                                    >
-                                                        {ciudad.nombre}
-                                                    </option>
-                                                ))}
-                                            </select>
-
-                                            <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-yellow-400">
-                                                <svg
-                                                    className="w-5 h-5"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    viewBox="0 0 24 24"
+                                        <select
+                                            {...register("ciudad", {
+                                                required:
+                                                    "Este campo es obligatorio",
+                                            })}
+                                            disabled={ciudades.length === 0}
+                                            className={`w-full px-3 py-2.5 rounded-lg text-sm border focus:outline-none focus:ring-2 focus:ring-yellow-400 transition ${
+                                                ciudades.length === 0
+                                                    ? "border-gray-200 bg-gray-100 text-gray-400"
+                                                    : "border-gray-300 bg-white"
+                                            }`}
+                                        >
+                                            <option value="">
+                                                {ciudades.length === 0
+                                                    ? "Primero selecciona un departamento"
+                                                    : "Selecciona una ciudad"}
+                                            </option>
+                                            {ciudades.map((ciudad) => (
+                                                <option
+                                                    key={ciudad.idCiudades}
+                                                    value={ciudad.idCiudades}
                                                 >
-                                                    <path
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                        strokeWidth={2}
-                                                        d="M19 9l-7 7-7-7"
-                                                    />
-                                                </svg>
-                                            </div>
-                                        </div>
+                                                    {ciudad.nombre}
+                                                </option>
+                                            ))}
+                                        </select>
                                         {errors.ciudad && (
                                             <p className="text-red-500 text-xs mt-1">
                                                 {errors.ciudad.message}
@@ -328,8 +289,9 @@ const CompraEnvio = () => {
                                     </div>
                                 </div>
 
+                                {/* Dirección principal */}
                                 <div>
-                                    <label className="block font-medium mb-1 text-sm">
+                                    <label className="block font-medium mb-1 text-sm text-gray-700">
                                         Dirección principal
                                     </label>
                                     <input
@@ -337,65 +299,51 @@ const CompraEnvio = () => {
                                             required:
                                                 "Este campo es obligatorio",
                                         })}
-                                        placeholder="Dirección completa"
-                                        className="w-full px-4 py-2 rounded-xl text-sm bg-white border border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                                        placeholder="Calle 123 #45-67"
+                                        className="w-full px-3 py-2.5 rounded-lg text-sm bg-white border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
                                     />
                                     {errors.direccionPrincipal && (
-                                        <p className="text-red-500 text-xs mt-0.5">
+                                        <p className="text-red-500 text-xs mt-1">
                                             {errors.direccionPrincipal.message}
                                         </p>
                                     )}
                                 </div>
 
-                                <div>
-                                    <label className="block font-medium mb-1 text-sm">
-                                        Dirección alternativa (opcional)
-                                    </label>
-                                    <input
-                                        {...register("direccionAlternativa")}
-                                        placeholder="Apto, piso u otra referencia"
-                                        className="w-full px-4 py-2 rounded-xl text-sm bg-white border border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                                    />
-                                </div>
+                                {/* Opcionales */}
+                                <input
+                                    {...register("direccionAlternativa")}
+                                    placeholder="Apto, piso u otra referencia (opcional)"
+                                    className="w-full px-3 py-2.5 rounded-lg text-sm bg-white border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
+                                />
 
-                                <div>
-                                    <label className="block font-medium mb-1 text-sm">
-                                        Código Postal (opcional)
-                                    </label>
-                                    <input
-                                        {...register("codigoPostal")}
-                                        placeholder="Código postal"
-                                        className="w-full px-4 py-2 rounded-xl text-sm bg-white border border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                                    />
-                                </div>
+                                <input
+                                    {...register("codigoPostal")}
+                                    placeholder="Código Postal (opcional)"
+                                    className="w-full px-3 py-2.5 rounded-lg text-sm bg-white border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
+                                />
 
-                                <div>
-                                    <label className="block font-medium mb-1 text-sm">
-                                        Instrucciones adicionales (opcional)
-                                    </label>
-                                    <textarea
-                                        {...register("instrucciones")}
-                                        placeholder="Ej. no timbrar, dejar en portería"
-                                        rows={3}
-                                        className="w-full px-4 py-2 rounded-xl text-sm bg-white border border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                                    />
-                                </div>
+                                <textarea
+                                    {...register("instrucciones")}
+                                    placeholder="Ej. no timbrar, dejar en portería (opcional)"
+                                    rows={3}
+                                    className="w-full px-3 py-2.5 rounded-lg text-sm bg-white border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
+                                />
                             </div>
                         </div>
                     </div>
 
-                    <div className="mt-6 flex justify-end">
+                    {/* Botones */}
+                    <div className="mt-8 flex justify-end gap-4">
                         <button
-                            className="px-10 py-2 bg-[#232f3e] mr-5 text-yellow-400 rounded hover:bg-[#3b4f68]"
-                            onClick={() => {
-                                navigate("/productos");
-                            }}
+                            type="button"
+                            className="px-6 py-2.5 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition"
+                            onClick={() => navigate("/productos")}
                         >
                             Cancelar
                         </button>
                         <button
                             type="submit"
-                            className="px-10 py-2 bg-yellow-400 ml-20 text-black rounded hover:bg-yellow-500"
+                            className="px-8 py-2.5 bg-yellow-400 text-black font-semibold rounded-lg shadow hover:bg-yellow-500 hover:scale-105 transition transform"
                         >
                             Continuar
                         </button>

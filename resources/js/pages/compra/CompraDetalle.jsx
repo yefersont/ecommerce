@@ -20,6 +20,7 @@ const CompraDetalle = () => {
         const request1 = axios.get(
             `http://127.0.0.1:8000/api/carrito/${idUsuario}`
         );
+
         const request2 = axios.get(`http://127.0.0.1:8000/api/metodospago/`);
 
         Promise.all([request1, request2])
