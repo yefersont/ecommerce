@@ -71,6 +71,8 @@ class DatosenvioController extends Controller
     public function show(string $id)
     {
         //
+        $datos = Datosenvio::where('Usuarios_idUsuarios', $id)->get();
+        return response()->json($datos);
     }
 
     /**

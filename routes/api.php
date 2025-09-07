@@ -21,7 +21,6 @@ use App\Http\Controllers\GoogleAuthController;
 use App\Http\Controllers\MercadoPagoController;
 use App\Http\Controllers\HistorialBusquedaController;
 use App\Http\Controllers\FacturasController;
-
 use App\Models\Product;
 
 /*
@@ -78,7 +77,6 @@ Route::middleware(['auth:sanctum', 'check.token.expiry'])->group(function () {
     // Orden de compra
     Route::post('/ordendetalle', [OrdenDetalleController::class, 'store']);
     Route::get('/informacion-compra/{idUsuario}/{idOrden}', [OrdenController::class, 'InformacionCompra']);
-
     // Comentarios
     Route::post('/comentarios', [ComentarioController::class, 'store']);
     // Historial de busqueda
@@ -87,8 +85,8 @@ Route::middleware(['auth:sanctum', 'check.token.expiry'])->group(function () {
     Route::get('/producto-categoria/{idCategoria}', [ProductoController::class, 'porCategoria']);
     Route::get('/ordenes/usuario/{idUsuario}', [OrdenController::class, 'OrdenPorUsuario']);
 
-
-
+    // Histotial de datos de envio
+    Route::get('/datosenvio-usuario/{idUsuario}', [DatosenvioController::class, 'show']);
 
     // Facturas
     Route::post('/generar-factura', [FacturasController::class, 'generarFactura']);
