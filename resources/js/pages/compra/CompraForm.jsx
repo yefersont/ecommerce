@@ -100,6 +100,35 @@ const CompraEnvio = () => {
         navigate("/compra-detalle");
     };
 
+    const onSubmitDireccionExistente = (data) => {
+        const seleccionada = Datos.find(
+            (d) => String(d.idDatosEnvio) === data.direccion
+        );
+
+        if (seleccionada) {
+            const direccionNormalizada = {
+                nombreCompleto: seleccionada.nombreCompleto || "",
+                telefono: seleccionada.Telefono || "",
+                correo: seleccionada.Correo || "",
+                Direccion: seleccionada.Direccion || "",
+                direccionAlternativa: seleccionada.DireccionAlternativa || "",
+                ciudad: seleccionada.Ciudades_idCiudades || null,
+                departamento:
+                    seleccionada.Departamentos_idDepartamentos || null,
+                codigoPostal: seleccionada.CodigoPostal || "",
+                identificacion: seleccionada.Identificacion || "",
+                observaciones: seleccionada.Observaciones || "",
+            };
+
+            setDatosEnvio(direccionNormalizada);
+            console.log(
+                "Dirección seleccionada (normalizada):",
+                direccionNormalizada
+            );
+            navigate("/compra-detalle");
+        }
+    };
+
     return (
         <div>
             {loading ? (
@@ -107,7 +136,8 @@ const CompraEnvio = () => {
             ) : (
                 <>
                     {Datos.length > 0 && !mostrarForm ? (
-                        <motion.div
+                        <motion.form
+                            onSubmit={handleSubmit(onSubmitDireccionExistente)}
                             initial={{ x: "-100%", opacity: 0 }}
                             animate={{ x: 0, opacity: 1 }}
                             exit={{ x: "-100%", opacity: 0 }}
@@ -117,49 +147,40 @@ const CompraEnvio = () => {
                             <h2 className="text-lg font-semibold text-gray-800 mb-4">
                                 Selecciona tu dirección de envío
                             </h2>
-
                             <div className="space-y-3">
                                 {Datos.map((d) => (
                                     <label
                                         key={d.idDatosEnvio}
-                                        onClick={() => setDatosEnvio(d)}
                                         className={`relative flex items-start gap-3 p-4 rounded-lg border cursor-pointer transition ${
-                                            datosEnvio &&
-                                            datosEnvio.idDatosEnvio ===
-                                                d.idDatosEnvio
+                                            watch("direccion") ===
+                                            String(d.idDatosEnvio)
                                                 ? "border-yellow-400 bg-yellow-100 ring-2 ring-yellow-300"
                                                 : "border-gray-300 bg-white hover:bg-yellow-50"
                                         }`}
                                     >
-                                        {/* Input oculto */}
+                                        {/* Input conectado a react-hook-form */}
                                         <input
                                             type="radio"
-                                            name="direccion"
                                             value={d.idDatosEnvio}
-                                            checked={
-                                                datosEnvio &&
-                                                datosEnvio.idDatosEnvio ===
-                                                    d.idDatosEnvio
-                                            }
-                                            readOnly
+                                            {...register("direccion", {
+                                                required: true,
+                                            })}
                                             className="hidden"
                                         />
 
                                         {/* Icono de selección */}
                                         <div
                                             className={`w-5 h-5 mt-1 rounded-full border flex items-center justify-center transition ${
-                                                datosEnvio &&
-                                                datosEnvio.idDatosEnvio ===
-                                                    d.idDatosEnvio
+                                                watch("direccion") ===
+                                                String(d.idDatosEnvio)
                                                     ? "border-yellow-500 bg-yellow-400"
                                                     : "border-gray-400 bg-white"
                                             }`}
                                         >
-                                            {datosEnvio &&
-                                                datosEnvio.idDatosEnvio ===
-                                                    d.idDatosEnvio && (
-                                                    <div className="w-2.5 h-2.5 rounded-full bg-black" />
-                                                )}
+                                            {watch("direccion") ===
+                                                String(d.idDatosEnvio) && (
+                                                <div className="w-2.5 h-2.5 rounded-full bg-black" />
+                                            )}
                                         </div>
 
                                         {/* Info de dirección */}
@@ -186,7 +207,10 @@ const CompraEnvio = () => {
                             {/* Link para agregar nueva dirección */}
                             <button
                                 type="button"
-                                onClick={() => setMostrarForm(true)}
+                                onClick={() => {
+                                    setDatosEnvio(null);
+                                    setMostrarForm(true);
+                                }}
                                 className="mt-4 text-sm font-medium text-yellow-600 hover:underline"
                             >
                                 + Nueva dirección
@@ -195,24 +219,13 @@ const CompraEnvio = () => {
                             {/* Botón de continuar */}
                             <div className="mt-6 flex justify-end">
                                 <button
-                                    type="button"
-                                    disabled={!datosEnvio}
-                                    onClick={() =>
-                                        console.log(
-                                            "Continuar con:",
-                                            datosEnvio
-                                        )
-                                    }
-                                    className={`px-8 py-2.5 font-semibold rounded-lg shadow transition transform ${
-                                        datosEnvio
-                                            ? "bg-yellow-400 text-black hover:bg-yellow-500 hover:scale-105"
-                                            : "bg-gray-300 text-gray-500 cursor-not-allowed"
-                                    }`}
+                                    type="submit"
+                                    className="px-8 py-2.5 bg-yellow-400 text-black font-semibold rounded-lg shadow hover:bg-yellow-500 hover:scale-105 transition transform"
                                 >
                                     Continuar
                                 </button>
                             </div>
-                        </motion.div>
+                        </motion.form>
                     ) : (
                         <motion.form
                             onSubmit={handleSubmit(onSubmit)}
