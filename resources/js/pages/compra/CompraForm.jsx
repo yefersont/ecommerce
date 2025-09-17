@@ -107,17 +107,15 @@ const CompraEnvio = () => {
 
         if (seleccionada) {
             const direccionNormalizada = {
-                nombreCompleto: seleccionada.nombreCompleto || "",
+                direccionPrincipal: seleccionada.Direccion || "",
+                direccionAlternativa: seleccionada.DireccionAlternativa || "",
+                instrucciones: seleccionada.Observaciones || "",
+                identificacion: seleccionada.Identificacion || "",
                 telefono: seleccionada.Telefono || "",
                 correo: seleccionada.Correo || "",
-                Direccion: seleccionada.Direccion || "",
-                direccionAlternativa: seleccionada.DireccionAlternativa || "",
-                ciudad: seleccionada.Ciudades_idCiudades || null,
-                departamento:
-                    seleccionada.Departamentos_idDepartamentos || null,
+                ciudad: seleccionada.Ciudades_idCiudades || "",
+                departamento: seleccionada.Departamentos_idDepartamentos || "",
                 codigoPostal: seleccionada.CodigoPostal || "",
-                identificacion: seleccionada.Identificacion || "",
-                observaciones: seleccionada.Observaciones || "",
             };
 
             setDatosEnvio(direccionNormalizada);
@@ -147,6 +145,7 @@ const CompraEnvio = () => {
                             <h2 className="text-lg font-semibold text-gray-800 mb-4">
                                 Selecciona tu dirección de envío
                             </h2>
+
                             <div className="space-y-3">
                                 {Datos.map((d) => (
                                     <label
@@ -183,7 +182,7 @@ const CompraEnvio = () => {
                                             )}
                                         </div>
 
-                                        {/* Info de dirección */}
+                                        {/* Info de dirección resumida */}
                                         <div>
                                             <p className="font-medium text-gray-800">
                                                 {d.Direccion}
@@ -248,35 +247,6 @@ const CompraEnvio = () => {
                                     </h3>
 
                                     <div className="space-y-4">
-                                        {/* Nombre */}
-                                        <div>
-                                            <label className="block font-medium mb-1 text-sm text-gray-700">
-                                                Nombre completo
-                                            </label>
-                                            <input
-                                                {...register("nombreCompleto", {
-                                                    required:
-                                                        "Este campo es obligatorio",
-                                                    pattern: {
-                                                        value: /^[A-Za-zÁÉÍÓÚÑáéíóúñ\s]+$/,
-                                                        message:
-                                                            "Solo se permiten letras",
-                                                    },
-                                                })}
-                                                placeholder="Ej: Juan Pérez"
-                                                className="w-full px-3 py-2.5 rounded-lg text-sm bg-white border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
-                                                onInput={handleNombreInput}
-                                            />
-                                            {errors.nombreCompleto && (
-                                                <p className="text-red-500 text-xs mt-1">
-                                                    {
-                                                        errors.nombreCompleto
-                                                            .message
-                                                    }
-                                                </p>
-                                            )}
-                                        </div>
-
                                         {/* Identificación */}
                                         <div>
                                             <label className="block font-medium mb-1 text-sm text-gray-700">

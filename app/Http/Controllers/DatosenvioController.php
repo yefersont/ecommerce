@@ -39,7 +39,6 @@ class DatosenvioController extends Controller
                 'Observaciones' => 'nullable|string'
             ]);
 
-
             $datosenvio = new Datosenvio();
             $datosenvio->Usuarios_idUsuarios = $request->Usuarios_idUsuarios;
             $datosenvio->Identificacion = $request->Identificacion;
@@ -70,10 +69,13 @@ class DatosenvioController extends Controller
      */
     public function show(string $id)
     {
-        //
-        $datos = Datosenvio::where('Usuarios_idUsuarios', $id)->get();
+        $datos = Datosenvio::with(['departamento', 'ciudade'])
+            ->where('Usuarios_idUsuarios', $id)
+            ->get();
+
         return response()->json($datos);
     }
+
 
     /**
      * Update the specified resource in storage.

@@ -93,3 +93,4 @@ Route::middleware(['auth:sanctum', 'check.token.expiry'])->group(function () {
 });
 // Integracion API mercadopago
 // Route::post('/webhooks/mercadopago', [MercadoPagoController::class, 'webhook']);
+Route::get('/datosenvio-usuario/{idUsuario}', [DatosenvioController::class, 'show']);
